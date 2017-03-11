@@ -85,8 +85,9 @@ void cadastrarCarro(ficha *controle){
 
 void listarCarros(ficha *controle){
 	char vendido[3];
+	int i = 0;
 	printf("Código \t|\t Modelo \t|\t Ano \t|\t Valor \t|\t Vendido\n");
-	for(int i=0; i< controle->cont; i++){
+	for(i; i< controle->cont; i++){
 		printf("%i", i);
 		printf("\t|\t");
 		printf("%s", controle->dados[i].modelo);
@@ -110,6 +111,8 @@ void venderCarro(ficha *controle){
 	if(opt < controle->cont){
 		controle->dados[opt].vendido = 'S';
 	}else{
+		system("cls");
+		printf("Código Inválido!\n\n ");
 		venderCarro(controle);
 	}
 }
