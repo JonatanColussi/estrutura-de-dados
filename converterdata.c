@@ -42,48 +42,62 @@ int quantidadeDiasMes(int mes){
 	}
 }
 int converterData(char data[]){
-    int i, dias, meses, anos = 0;
-    char *p = strtok (data, "/");
-    char *array[3];
+    int i, soma, j = 0; //Inicializando as variaveis
+    char *p = strtok (data, "/"); //Iniciando a separação da data por barras
+    char *array[3]; //Vetor que receberá os valores separados
 
-    while (p != NULL){
+    while (p != NULL){ //Separando a data por barras
         array[i++] = p;
         p = strtok (NULL, "/");
     }
 	
-	dias = atoi(array[0]);
-	meses = atoi(array[1])*quantidadeDiasMes(atoi(array[1]));
-	anos = atoi(array[2])*365;
+	//array[0] = dia
+	//array[1] = mes
+	//array[2] = ano
 	
-    return dias+meses+anos;
+	soma += atoi(array[0]); //Soma os dias
+	
+	for(j = 1; j < atoi(array[1]); j++) //Percorre os meses
+		soma += quantidadeDiasMes(i); //soma os dias referentes à cada mês
+	
+	soma += (atoi(array[2])*365); // soma os anos
+	
+	return soma; //retorna a soma de dias
 }
 
-int diaAtutal(){
+int diaAtual(){
 	char dateStr[9];
-    _strdate(dateStr);
+    _strdate(dateStr); //pegando a data atual no formato MM/DD/YY
+    
     int i = 0;
-    char *p = strtok (dateStr, "/");
-    char *array[3];
+    char *p = strtok (dateStr, "/"); //Iniciando a separação da data por barras
+    char *array[3]; //Vetor que receberá os valores separados
 	char data[10] = "";
 	
-    while (p != NULL){
+    while (p != NULL){ //Separando a data por barras
         array[i++] = p;
         p = strtok (NULL, "/");
     }
     
+	//array[0] = mes
+    //array[] = dia
+	//array[2] = ano
     
+    //Montando a data no formato DD/MM/YYYY
     strcat(data, array[1]);
     strcat(data, "/");
     strcat(data, array[0]);
     strcat(data, "/20");
     strcat(data, array[2]);
-    
-    return converterData(data);
+    printf("\n\n%i\n\n", converterData(data));
+    //Retorna a data em dias
+//    return converterData(data);
+	return 0;
 }
 
 void main (){
 	char data[10] = "05/04/2017";
     printf("%i", converterData(data));
     printf("%\n");
-    printf("%i", diaAtutal());
+    printf("%i", diaAtual());
 }
