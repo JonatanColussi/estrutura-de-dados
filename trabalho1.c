@@ -161,14 +161,12 @@ void cadastraProduto(base *listaCadastro,int *ano){
 
 void excluiProduto(base *listaCadastro){
 	int cod,pf=0,x;
-	int pos = 0;
-	int achou = 0;
-	int cont = 0;
+	int pos, achou, cont, i = 0;
 	
 	printf("\t-----------------");
 	printf("\n\t| Exclui produto\n\n");
 	
-	for(int i=0; i<listaCadastro->qtde;i++){
+	for(i=0; i<listaCadastro->qtde;i++){
 		printf("\n\tnome: %s codigo: %i\n",listaCadastro->dados[i].nome,listaCadastro->dados[i].codProduto);		
 	
 	}
@@ -219,7 +217,8 @@ void sair(){
 }
 
 void relatorioProduto(base *listaCadastro, int *ano){
-	for(int i=0; i<listaCadastro->qtde;i++){
+	int i = 0;
+	for(i=0; i<listaCadastro->qtde;i++){
 		if(listaCadastro->dados[i].dataValidade== *ano){
 		printf("| nome: %s | codigo: %i | descrição:%s | data de Validade: %i |Alerta:Produto vence esse ano!",listaCadastro->dados[i].nome,listaCadastro->dados[i].codProduto,listaCadastro->dados[i].descricao,listaCadastro->dados[i].dataValidade);		
 		printf("\n|----------------------------------------------------------------\n");
