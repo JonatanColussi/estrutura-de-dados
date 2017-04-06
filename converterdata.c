@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 int quantidadeDiasMes(int mes){
@@ -55,10 +56,13 @@ int converterData(char data[]){
 	//array[1] = mes
 	//array[2] = ano
 	
-	soma += atoi(array[0]); //Soma os dias
+	printf("dia %i\n", atoi(array[0]));
+	printf("mes %i\n", atoi(array[1]));
+	printf("ano %i\n\n", atoi(array[2]));
+	soma = atoi(array[0]); //Soma os dias
 	
 	for(j = 1; j < atoi(array[1]); j++) //Percorre os meses
-		soma += quantidadeDiasMes(i); //soma os dias referentes à cada mês
+		soma += quantidadeDiasMes(j); //soma os dias referentes à cada mês
 	
 	soma += (atoi(array[2])*365); // soma os anos
 	
@@ -72,7 +76,8 @@ int diaAtual(){
     int i = 0;
     char *p = strtok (dateStr, "/"); //Iniciando a separação da data por barras
     char *array[3]; //Vetor que receberá os valores separados
-	char data[10] = "";
+	char dataAtual[10] = "";
+	char *data;
 	
     while (p != NULL){ //Separando a data por barras
         array[i++] = p;
@@ -80,24 +85,26 @@ int diaAtual(){
     }
     
 	//array[0] = mes
-    //array[] = dia
+    //array[1] = dia
 	//array[2] = ano
     
     //Montando a data no formato DD/MM/YYYY
-    strcat(data, array[1]);
-    strcat(data, "/");
-    strcat(data, array[0]);
-    strcat(data, "/20");
-    strcat(data, array[2]);
-    printf("\n\n%i\n\n", converterData(data));
+    strcpy(dataAtual, array[1]);
+    strcat(dataAtual, "/");
+    strcat(dataAtual, array[0]);
+    strcat(dataAtual, "/20");
+    strcat(dataAtual, array[2]);
+    
+    data = malloc(sizeof(dataAtual));
+    strcpy(data, dataAtual);
     //Retorna a data em dias
-//    return converterData(data);
-	return 0;
+    return converterData(data);
 }
 
 void main (){
-	char data[10] = "05/04/2017";
-    printf("%i", converterData(data));
-    printf("%\n");
+	char data[10] = "06/04/2017";
+    printf("%i\n\n", converterData(data));
+    
+    printf("\n");
     printf("%i", diaAtual());
 }
