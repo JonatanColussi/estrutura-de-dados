@@ -1,172 +1,152 @@
-//trabalho da facul!! 
-//Sistema crud de produtos, **cadastro com prazos de validade dos produtos, relatorios, exclusao e ordenacao**
-
-
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <conio.h>
 #include <locale.h>
 #include <stdlib.h>
-
-
-
-
+#include <time.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <wchar.h>
+#define QTD 2
 
 typedef struct{   //estrutura para cadastrar produtos
 	char nome[20];
 	char descricao[40];
-	int dataValidade;
+	char dataValidade[9];
 	int codProduto;
 }cadastro;
 
 typedef struct{   //estrutura para controlar o numero de produtos cadastrados e suas posicoes.
-	cadastro dados[1000];
-	int qtde;
+	cadastro dados[QTD];
+	int f;
+	int diaAtual;
 }base;
 
+int diaAtual();
+int quantidadeDiasMes(int mes);
+int converterData(char data[]);
+int prazoValidade(char data[], base *listaCadastro);
 
-void cadastraProduto(base *listaCadastro, int *ano);//Prototipando as funcoes
+void cria_lista(base *listaCadastro);       // inicializa a lista
+void cadastraProduto(base *listaCadastro);//Prototipando as funcoes
 void sair(); 
 void excluiProduto(base *listaCadastro);
-void relatorioProduto(base *listaCadastro, int *ano);
+void relatorioProduto(base *listaCadastro);
 void ordenaProduto(base *listaCadastro);
 
 int main(void){
 	setlocale(LC_ALL,"portuguese");
-	
-	
-	
 	base listaCadastro;
-	listaCadastro.qtde=0;
-	int codCadastro=0;
-	
 	char op;
-	int ano = 0;
-	printf("Qual o ano atual?");
-	fflush(stdin);
-	scanf("%i",&ano);
 	fflush(stdin);
 	
+	cria_lista(&listaCadastro);
 	do{
-		printf("------------------------------");
-		printf("\n                             |");
-		printf("\n  ACOMPANHAMENTO DE PRODUTOS |");
-		printf("\n                             |");	
-		printf("\n 1- Cadastrar produto        |");
-		printf("\n 2- Excluir produto          |");
-		printf("\n 3- Relatorio dos produtos   |");
-		printf("\n 4- Ordenar os produtos      |");
-		printf("\n s- Sair                     |");
-		printf("\n------------------------------\n");
+		system("cls");
+		printf("\n\t ----> AgroTEC <----  ");
+		printf("\n Escolha uma opÁ„o abaixo: ");
+		printf("\n\t 1- Cadastrar produto        |");
+		printf("\n\t 2- Excluir produto          |");
+		printf("\n\t 3- Relatorio dos produtos   |");
+		printf("\n\t 4- Ordenar os produtos      |");
+		printf("\n\t s- Sair                     |");
+		printf("\nDigite: ");
 		scanf("%c", &op);
 		fflush(stdin);
+		
 		switch(op){
 			case '1':
-				 cadastraProduto(&listaCadastro, &ano);
+				cadastraProduto(&listaCadastro);
 				break;
 			case '2':
-				if (listaCadastro.qtde==0){
-						printf (" - N√£o h√° produtos cadastrados! \n");
-					}else{		
-						excluiProduto(&listaCadastro);
-						}
-					
-					break;
+			    excluiProduto(&listaCadastro);
 				break;
 			case '3':
-				if (listaCadastro.qtde==0){
-						printf (" - N√£o h√° produtos cadastrados! \n");
-					
-					}else{
-							
-						relatorioProduto(&listaCadastro, &ano);
-						}				
+			    relatorioProduto(&listaCadastro);				
 				break;
-			case '4':
-				if (listaCadastro.qtde==0){
-						printf (" - N√£o h√° produtos cadastrados! \n");
-					
-					}else{						
-						ordenaProduto(&listaCadastro);
-						}
-				
-				
-				break;
+			case '4':					
+                ordenaProduto(&listaCadastro);
+                break;
 			case 's':
-				 sair();
+				sair();
 				break;
-				default:
-					printf("\nVoce digitou algo errado!\n");
+			default:
+                system("cls");
+			    printf (" - Digito inv·lido! \n\n");
+                system("pause");
 		}
-		
-		
-		
 	}while(toupper(op)!='S');
-	
-	
 }
 
+void cria_lista(base *listaCadastro){
+    listaCadastro->f = 0;
+    listaCadastro->diaAtual = diaAtual();
+}
 
-
-void cadastraProduto(base *listaCadastro,int *ano){
-
+void cadastraProduto(base *listaCadastro){
 	cadastro auxprod;
-
-	printf("\t ------------------");
-	printf("\n\t| Cadastra Produto ");
-	printf("\n\t|                  ");
-	printf("\n\t| Nome: ");
-	gets(auxprod.nome);
-	fflush(stdin);
-
-	printf("\t| Descri√ß√£o: ");
-	gets(auxprod.descricao);
-	fflush(stdin);
-
-	printf("\t| Data de validade: ");
-	scanf("%i",&auxprod.dataValidade);
-	fflush(stdin);
-	printf("\t ------------------");
-	/*printf("\nCodigo do produto: ");
-	scanf("%i",&auxprod.codProduto);
-	fflush(stdin);*/
+	char confirmarData;
+	int i;
+	if(listaCadastro->f <= QTD){
+		system("cls");
+		printf("\t ------------------");
+		printf("\n\t| Cadastro de Produtos ");
+		printf("\n\t|");
+		printf("\n\t| Codigo do produto: ");
+		scanf("%i", &auxprod.codProduto);
+		fflush(stdin);
+		
+		printf("\t| Nome: ");
+		gets(auxprod.nome);
+		fflush(stdin);
 	
-	if(auxprod.dataValidade<*ano){
-		printf("Produto nao pode ser cadastrado pois est√° fora da validade!!!\n");
-	}else{
+		printf("\t| DescriÁ„o: ");
+		gets(auxprod.descricao);
+		fflush(stdin);
 	
-	//Criando o codigo, ele nao pode ser 0, portando somamos sempre +1, assim ele nao ser√° 0 e nem se repetir√°.
-	auxprod.codProduto = listaCadastro->qtde+1;
-
-	//armazenando os dados cadastrados na vari√°vel "dados", do tipo "cliente".
-	listaCadastro->dados[listaCadastro->qtde]=auxprod;
-
-	//Aumenta o n√∫mero de clientes cadastrados.
-	listaCadastro->qtde++;
-	}
-			/*if(listaCadastro->dados.dataValidade<ano){
-				for (cont = pos; cont < listaCadastro->qtde; cont++ )
-				{ // DELETANDO
-					listaCadastro->dados[cont] = listaCadastro->dados[cont+1];
-					listaCadastro->qtde--;
-				}
-				printf("\n\t Produto fora da validade excluido com sucesso!\n");
+		do{
+			printf("\t| Data de validade: ");
+			for(i=0; i <= 9; i++){
+				if(i == 2 || i == 5){
+					auxprod.dataValidade[i] = '/';
+					printf("/");
+				}else
+					auxprod.dataValidade[i] = getche();
+				fflush(stdin);
 			}
 			
-			printf("\n\n\tCadastro Realizado com sucesso!!!\n\n");
-		*/
+			printf("\n\t|");
+			printf("\n\t|\t Data informada: %s", auxprod.dataValidade);
+			printf("\n\t|\t Confirma a data informada? [S/N] ");
+			scanf("%c", &confirmarData);
+			fflush(stdin);
+		}while(toupper(confirmarData) !='S');
+		
+		printf("\t|");
+		printf("\n\t|");
 	
+		//armazenando os dados cadastrados na vari·vel "dados"
+		listaCadastro->dados[listaCadastro->f] = auxprod;
+	
+		//Aumenta o n˙mero de produtos cadastrados.
+		listaCadastro->f++;
+			
+		printf("\t- Produto cadastrado com sucesso!!\n\n");
+		system("pause");
+	}else{
+		system("cls");
+		printf("\t- A lista est· cheia!!!\n\n");
+		system("pause");
+	}
 }
-
-
 void excluiProduto(base *listaCadastro){
-	int cod,pf=0,x;
-	int pos, achou, cont, i = 0;
-	
-	printf("\t-----------------");
+	int x;
+	int pos, achou,cont, i, cod, pf = 0;
+	system("cls");
 	printf("\n\t| Exclui produto\n\n");
 	
-	for(i=0; i<listaCadastro->qtde;i++){
+	for(i=0; i<listaCadastro->f;i++){
 		printf("\n\tnome: %s codigo: %i\n",listaCadastro->dados[i].nome,listaCadastro->dados[i].codProduto);		
 	
 	}
@@ -176,8 +156,8 @@ void excluiProduto(base *listaCadastro){
 	scanf("%i",&cod);
 	fflush(stdin);
 	
-	// Encontra a posi√ß√£o do produto no vetor que tenha o c√≥digo igual ao informado pelo usu√°rio
-	for (cont = 0; cont < listaCadastro->qtde; cont++)
+	// Encontra a posiÁ„o do produto no vetor que tenha o cÛdigo igual ao informado pelo usu·rio
+	for (cont = 0; cont < listaCadastro->f; cont++)
 	{
 		if (cod == listaCadastro->dados[cont].codProduto)
 		{
@@ -187,57 +167,58 @@ void excluiProduto(base *listaCadastro){
 	}
 	
 	// Deleta o produto passando os da frente pra tras
-	if ( achou != 0) // come√ßa a deletar
+	if ( achou != 0) // comeÁa a deletar
 	{
-		for (cont = pos; cont < listaCadastro->qtde; cont++ )
+		for (cont = pos; cont < listaCadastro->f; cont++ )
 		{ // DELETANDO
 			listaCadastro->dados[cont] = listaCadastro->dados[cont+1];
-			listaCadastro->qtde--;
+			listaCadastro->f--;
 		}
-		printf("\n\t Produto excluido com sucesso!\n");
+		printf("\n\t Produto excluido com sucesso!\n\n");
+		system("pause");
 	}
 		else // caso nao tenha achado
 		{
-			printf (" N√£o foram encontrados produtos com este c√≥digo! \n");
+			printf (" N„o foram encontrados produtos com este cÛdigo! \n\n");
+			system("pause");
 		}
 	
 	
 }
-
-
-
-
-
-
-
 void sair(){
-
+	
 	printf("\n\n Sistema finalizado com sucesso! \n\n");
 	
 }
-
-void relatorioProduto(base *listaCadastro, int *ano){
-	int i = 0;
-	for(i=0; i<listaCadastro->qtde;i++){
-		if(listaCadastro->dados[i].dataValidade== *ano){
-		printf("| nome: %s | codigo: %i | descri√ß√£o:%s | data de Validade: %i |Alerta:Produto vence esse ano!",listaCadastro->dados[i].nome,listaCadastro->dados[i].codProduto,listaCadastro->dados[i].descricao,listaCadastro->dados[i].dataValidade);		
-		printf("\n|----------------------------------------------------------------\n");
-	}else if(listaCadastro->dados[i].dataValidade==*ano+1){
-		printf("| nome: %s | codigo: %i | descri√ß√£o:%s | data de Validade: %i |Alerta:Produto vence ano que vem!",listaCadastro->dados[i].nome,listaCadastro->dados[i].codProduto,listaCadastro->dados[i].descricao,listaCadastro->dados[i].dataValidade);		
-		printf("\n|----------------------------------------------------------------\n");
-	}else{
-		printf("| nome: %s | codigo: %i | descri√ß√£o:%s | data de Validade: %i |",listaCadastro->dados[i].nome,listaCadastro->dados[i].codProduto,listaCadastro->dados[i].descricao,listaCadastro->dados[i].dataValidade);		
-		printf("\n|----------------------------------------------------------------\n");
+void relatorioProduto(base *listaCadastro){
+	int i;
+	int dias;
+	for(i = 0; i < listaCadastro->f; i++){
+		printf("Codigo: %i\n ", listaCadastro->dados[i].codProduto);
+		printf("Nome: %s\n ", listaCadastro->dados[i].nome);
+		printf("DescriÁ„o: %s \n", listaCadastro->dados[i].descricao);
+		printf("Data de Validade: %s \n", listaCadastro->dados[i].dataValidade);
+		dias = prazoValidade(listaCadastro->dados[i].dataValidade, listaCadastro);
+		printf("\n\n%i\n\n",listaCadastro->diaAtual);
+		printf("\n\n%i\n\n",converterData(listaCadastro->dados[i].dataValidade));
+		if(dias == 0)
+			printf("O produto vence hoje!");
+		else if(dias > 0)
+			printf("O produto vence em %i dias!", &dias);
+		else{
+			dias *= -1;			
+			printf("O produto venceu h· %i dias!", &dias);
+		}
+		
 	}
-	}
+	system("pause");
 }
-
 void ordenaProduto(base *listaCadastro){
 	
 	char escolha;
-	
+	system("cls");
 	printf("\n\nVoce deseja ordenar de que forma? \n");
-	printf (" 1 - C√≥digo \n");
+	printf (" 1 - CÛdigo \n");
 	printf (" 2 - Validade \n");
 	printf (" 3 - Nome \n");
 	
@@ -249,49 +230,160 @@ void ordenaProduto(base *listaCadastro){
 	cadastro aux;
 	
 	switch (tolower(escolha)){
-		case '1': // Ordenar por c√≥digo
-			// Ordena√ß√£o BOLHA
-			for (cont1 = 0; cont1 < listaCadastro->qtde; cont1++){
-				for (cont2 = cont1+1; cont2 < listaCadastro->qtde; cont2++){
-					if (listaCadastro->dados[cont1].codProduto > listaCadastro->dados[cont2].codProduto){ // Caso seja menor entrar√° aqui e trocar√° a posi√ß√£o
-						aux = listaCadastro->dados[cont1]; // mem√≥ria
-						// troca as posi√ß√µes
+		case '1': // Ordenar por cÛdigo
+			// OrdenaÁ„o BOLHA
+			for (cont1 = 0; cont1 < listaCadastro->f; cont1++){
+				for (cont2 = cont1+1; cont2 < listaCadastro->f; cont2++){
+					if (listaCadastro->dados[cont1].codProduto > listaCadastro->dados[cont2].codProduto){ // Caso seja menor entrar· aqui e trocar· a posiÁ„o
+						aux = listaCadastro->dados[cont1]; // memÛria
+						// troca as posiÁıes
 						listaCadastro->dados[cont1] = listaCadastro->dados[cont2];
 						listaCadastro->dados[cont2] = aux;
 					}
 				}
 			}
+			printf("\n Alterado com sucesso!!!\n\n");
+			system("pause");
 			break;
 		case '2': // Ordenar por validade
-				for (cont1 = 0; cont1 < listaCadastro->qtde; cont1++){
-					for (cont2 = cont1+1; cont2 < listaCadastro->qtde; cont2++){
-						if (listaCadastro->dados[cont1].dataValidade > listaCadastro->dados[cont2].dataValidade){ // Caso seja menor entrar√° aqui e trocar√° a posi√ß√£o
-							aux = listaCadastro->dados[cont1]; // mem√≥ria
-							// troca as posi√ß√µes
+				for (cont1 = 0; cont1 < listaCadastro->f; cont1++){
+					for (cont2 = cont1+1; cont2 < listaCadastro->f; cont2++){
+						if (listaCadastro->dados[cont1].dataValidade > listaCadastro->dados[cont2].dataValidade){ // Caso seja menor entrar· aqui e trocar· a posiÁ„o
+							aux = listaCadastro->dados[cont1]; // memÛria
+							// troca as posiÁıes
 							listaCadastro->dados[cont1] = listaCadastro->dados[cont2];
 							listaCadastro->dados[cont2] = aux;
 						}
 				}
 			}
+			printf("\n Alterado com sucesso!!!\n\n");
+			system("pause");
 			break;
 		case '3':
-			for (cont1 = 0; cont1 < listaCadastro->qtde; cont1++){
-					for (cont2 = cont1+1; cont2 < listaCadastro->qtde; cont2++){
-						if (strcmpi(listaCadastro->dados[cont1].nome,listaCadastro->dados[cont2].nome) > 0 ){ // Caso seja menor entrar√° aqui e trocar√° a posi√ß√£o
-							aux = listaCadastro->dados[cont1]; // mem√≥ria
-							// troca as posi√ß√µes
+			for (cont1 = 0; cont1 < listaCadastro->f; cont1++){
+					for (cont2 = cont1+1; cont2 < listaCadastro->f; cont2++){
+						if (strcmpi(listaCadastro->dados[cont1].nome,listaCadastro->dados[cont2].nome) > 0 ){ // Caso seja menor entrar· aqui e trocar· a posiÁ„o
+							aux = listaCadastro->dados[cont1]; // memÛria
+							// troca as posiÁıes
 							listaCadastro->dados[cont1] = listaCadastro->dados[cont2];
 							listaCadastro->dados[cont2] = aux;
 						}
 				}
 			}
+			printf("\n Alterado com sucesso!!!\n\n");
+			system("pause");
 			break;
 			default:
-				printf("Op√ß√£o invalida!!!\n");
+				printf("\n OpÁ„o invalida!!!\n\n");
+				system("pause");
 	}
 	
+}
+int quantidadeDiasMes(int mes){
+	switch(mes){
+		case 1:
+			return 31;
+			break;
+		case 2:
+			return 28;
+			break;
+		case 3:
+			return 31;
+			break;
+		case 4:
+			return 30;
+			break;
+		case 5:
+			return 31;
+			break;
+		case 6:
+			return 30;
+			break;
+		case 7:
+			return 31;
+			break;
+		case 8:
+			return 31;
+			break;
+		case 9:
+			return 30;
+			break;
+		case 10:
+			return 31;
+			break;
+		case 11:
+			return 30;
+			break;
+		case 12:
+			return 31;
+			break;
+	}
+}
+int converterData(char data[]){
+    int i, soma, j, k = 0; //Inicializando as variaveis
+    char *array[3]; //Vetor que receber· os valores separados
+	
+	array[0] = data[0];//dia
+	strcat(array[0], data[1]);//dia
+	strcpy(array[1], data[3]);//mÍs
+	strcat(array[1], data[4]);//mÍs
+	strcpy(array[2], data[6]);//ano
+	strcat(array[2], data[7]);//ano
+	strcat(array[2], data[8]);//ano
+	strcat(array[2], data[9]);//ano
 	
 	
+	//array[0] = dia
+	//array[1] = mes
+	//array[2] = ano
+	printf("\n dias%s\n\n", array[0]);
+	printf("\n meses%s\n\n", array[1]);
+	printf("\n anos%s\n\n", array[2]);
+	soma = atoi(array[0]); //Soma os dias
 	
+	for(j = 1; j < atoi(array[1]); j++) //Percorre os meses
+		soma += quantidadeDiasMes(j); //soma os dias referentes ‡ cada mÍs
 	
+	soma += (atoi(array[2])*365); // soma os anos
+	
+	for(k=0; k <= 2; k++)
+		array[k] = 0;
+
+	return soma; //retorna a soma de dias
+}
+
+int diaAtual(){
+	char dateStr[9];
+    _strdate(dateStr); //pegando a data atual no formato MM/DD/YY
+    
+    int i = 0;
+    char *p = strtok (dateStr, "/"); //Iniciando a separaÁ„o da data por barras
+    char *array[3]; //Vetor que receber· os valores separados
+	char dataAtual[10] = "";
+	char *data;
+	
+    while (p != NULL){ //Separando a data por barras
+        array[i++] = p;
+        p = strtok (NULL, "/");
+    }
+    
+	//array[0] = mes
+    //array[1] = dia
+	//array[2] = ano
+    
+    //Montando a data no formato DD/MM/YYYY
+    strcpy(dataAtual, array[1]);
+    strcat(dataAtual, "/");
+    strcat(dataAtual, array[0]);
+    strcat(dataAtual, "/20");
+    strcat(dataAtual, array[2]);
+    
+    data = malloc(sizeof(dataAtual));
+    strcpy(data, dataAtual);
+    //Retorna a data em dias
+    return converterData(data);
+}
+
+int prazoValidade(char data[], base *listaCadastro){
+	return converterData(data) - (listaCadastro->diaAtual);
 }

@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <conio.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <time.h>
 
-#DEFINE QTD 10
+#define QTD 10
 
 typedef struct{   //estrutura para cadastrar produtos
 	char nome[20];
@@ -19,24 +20,23 @@ typedef struct{   //estrutura para controlar o numero de produtos cadastrados e 
 	int f;
 }base;
 
-void cadastraProduto(base *listaCadastro, int *ano);//Prototipando as funcoes
+void cria_lista(int *fim );       // inicializa a lista
+void cadastraProduto(base *listaCadastro);//Prototipando as funcoes
 void sair(); 
 void excluiProduto(base *listaCadastro);
-void relatorioProduto(base *listaCadastro, int *ano);
+void relatorioProduto(base *listaCadastro);
 void ordenaProduto(base *listaCadastro);
 int prazoValidade(char data[]);
 
 int main(void){
 	setlocale(LC_ALL,"portuguese");
 	base listaCadastro;
-	listaCadastro.f=0;
-	int codCadastro=0;
 	char op;
-	int ano = pegarAno();
 	fflush(stdin);
+	
+	cria_lista(&listaCadastro.f);
 	do{
 		system("cls");
-		printf("\n Ano atual: %i", ano);
 		printf("\n\t ----> AgroTEC <----  ");
 		printf("\n Escolha uma opção abaixo: ");
 		printf("\n\t 1- Cadastrar produto        |");
@@ -47,64 +47,50 @@ int main(void){
 		printf("\nDigite: ");
 		scanf("%c", &op);
 		fflush(stdin);
+		
 		switch(op){
 			case '1':
-				 cadastraProduto(&listaCadastro, &ano);
-				break;
+				 cadastraProduto(&listaCadastro);
+				 break;
 			case '2':
-				if (listaCadastro.f==0){
-						system("cls");
-						printf (" - Não há produtos cadastrados! \n\n");
-						system("pause");
-					}else{		
-						excluiProduto(&listaCadastro);
-						}
-					
-					break;
-				break;
+			     excluiProduto(&listaCadastro);
+				 break;
 			case '3':
-				if (listaCadastro.f==0){
-						system("cls");
-						printf (" - Não há produtos cadastrados! \n\n");
-						system("pause");
-					}else{
-							
-						relatorioProduto(&listaCadastro, &ano);
-						}				
-				break;
-			case '4':
-				if (listaCadastro.f==0){
-						system("cls");
-						printf (" - Não há produtos cadastrados! \n\n");
-						system("pause");
-					}else{						
-						ordenaProduto(&listaCadastro);
-						}
-				
-				
-				break;
+			     relatorioProduto(&listaCadastro);				
+				 break;
+			case '4':					
+                 ordenaProduto(&listaCadastro);
+                 break;
 			case 's':
 				 sair();
-				break;
-				default:
-					system("cls");
-					printf (" - Digito inválido! \n\n");
-					system("pause");
+				 break;
+			default:
+                 system("cls");
+			     printf (" - Digito inválido! \n\n");
+                 system("pause");
 		}
 		
 		
 		
 	}while(toupper(op)!='S');
-	
-	
 }
-void cadastraProduto(base *listaCadastro,int *ano){
+
+void cria_lista(int *fim){
+    *fim = 0;
+}
+
+void cadastraProduto(base *listaCadastro){
 
 	cadastro auxprod;
 
 	printf("\t ------------------");
 	printf("\n\t| Cadastra Produto ");
 	printf("\n\t|                  ");
+	
+	printf("\t| Codigo do produto: ");
+	scanf("%i", &auxprod.codProduto);
+	fflush(stdin);
+	
 	printf("\n\t| Nome: ");
 	gets(auxprod.nome);
 	fflush(stdin);
@@ -114,13 +100,23 @@ void cadastraProduto(base *listaCadastro,int *ano){
 	fflush(stdin);
 
 	printf("\t| Data de validade: ");
-	gets(auxprod.dataValidade);
+	auxprod.dataValidade[0] = getche();
+	auxprod.dataValidade[1] = getche();
+	auxprod.dataValidade[2] = '/';
+	printf("/");
+	auxprod.dataValidade[3] = getche();
+	auxprod.dataValidade[4] = getche();
+	auxprod.dataValidade[5] = '/';
+	printf("/");
+	auxprod.dataValidade[6] = getche();
+	auxprod.dataValidade[7] = getche();
+	auxprod.dataValidade[8] = getche();
+	auxprod.dataValidade[9] = getche();
+	
+	//gets(auxprod.dataValidade);
 	fflush(stdin);
 	
-	printf("\t ------------------");
-	printf("\nCodigo do produto: ");
-	scanf("%i", &auxprod.codProduto);
-	fflush(stdin);
+	
 
 	if(prazoValidade(auxprod.dataValidade) < 0){
 		printf("\n\n - Produto não pode ser cadastrado pois está fora da validade!!!\n\n");
@@ -187,13 +183,13 @@ void sair(){
 	printf("\n\n Sistema finalizado com sucesso! \n\n");
 	
 }
-void relatorioProduto(base *listaCadastro, int *ano){
+void relatorioProduto(base *listaCadastro){
 	for(int i=0; i<listaCadastro->f;i++){
-		if(listaCadastro->dados[i].dataValidade== *ano){
+		if(listaCadastro->dados[i].dataValidade== "aa"){
 		printf("| nome: %s | codigo: %i | descrição:%s | data de Validade: %i |Alerta:Produto vence esse ano!",listaCadastro->dados[i].nome,listaCadastro->dados[i].codProduto,listaCadastro->dados[i].descricao,listaCadastro->dados[i].dataValidade);		
 		printf("\n|----------------------------------------------------------------\n");
 	
-	}else if(listaCadastro->dados[i].dataValidade==*ano+1){
+	}else if(listaCadastro->dados[i].dataValidade=="aaa"){
 		printf("| nome: %s | codigo: %i | descrição:%s | data de Validade: %i |Alerta:Produto vence ano que vem!",listaCadastro->dados[i].nome,listaCadastro->dados[i].codProduto,listaCadastro->dados[i].descricao,listaCadastro->dados[i].dataValidade);		
 		printf("\n|----------------------------------------------------------------\n");
 	

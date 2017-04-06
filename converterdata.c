@@ -103,6 +103,7 @@ int prazoValidade(char data[]){
 }
 
 void main (){
-	char data[10] = "01/04/2017";
+	char data[10];
+	gets(data);
     printf("%i\n\n", prazoValidade(data));
 }
