@@ -8,12 +8,14 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <wchar.h>
-#define QTD 2
+#define QTD 10
 
 typedef struct{   //estrutura para cadastrar produtos
 	char nome[20];
 	char descricao[40];
 	char dataValidade[9];
+	float valor;
+	int quantidade;
 	int codProduto;
 }cadastro;
 
@@ -30,6 +32,7 @@ int prazoValidade(char data[], base *listaCadastro);
 
 void cria_lista(base *listaCadastro);       // inicializa a lista
 void cadastraProduto(base *listaCadastro);//Prototipando as funcoes
+int procura_nodo(base *listaCadastro);
 void sair(); 
 void excluiProduto(base *listaCadastro);
 void relatorioProduto(base *listaCadastro);
@@ -93,7 +96,7 @@ void cadastraProduto(base *listaCadastro){
 		printf("\t ------------------");
 		printf("\n\t| Cadastro de Produtos ");
 		printf("\n\t|");
-		printf("\n\t| Codigo do produto: ");
+		printf("\n\t| Código do produto: ");
 		scanf("%i", &auxprod.codProduto);
 		fflush(stdin);
 		
@@ -103,6 +106,14 @@ void cadastraProduto(base *listaCadastro){
 	
 		printf("\t| Descrição: ");
 		gets(auxprod.descricao);
+		fflush(stdin);
+		
+		printf("\n\t| Valor unitário R$: ");
+		scanf("%f", &auxprod.valor);
+		fflush(stdin);
+		
+		printf("\n\t| Quantidade: ");
+		scanf("%i", &auxprod.valor);
 		fflush(stdin);
 	
 		do{
@@ -117,8 +128,8 @@ void cadastraProduto(base *listaCadastro){
 			}
 			
 			printf("\n\t|");
-			printf("\n\t|\t Data informada: %s", auxprod.dataValidade);
-			printf("\n\t|\t Confirma a data informada? [S/N] ");
+			printf("\n\t|\t Data dadosrmada: %s", auxprod.dataValidade);
+			printf("\n\t|\t Confirma a data dadosrmada? [S/N] ");
 			scanf("%c", &confirmarData);
 			fflush(stdin);
 		}while(toupper(confirmarData) !='S');
@@ -133,6 +144,7 @@ void cadastraProduto(base *listaCadastro){
 		listaCadastro->f++;
 			
 		printf("\t- Produto cadastrado com sucesso!!\n\n");
+		ordenaProduto(listaCadastro);
 		system("pause");
 	}else{
 		system("cls");
@@ -140,51 +152,33 @@ void cadastraProduto(base *listaCadastro){
 		system("pause");
 	}
 }
-void excluiProduto(base *listaCadastro){
-	int x;
-	int pos, achou,cont, i, cod, pf = 0;
-	system("cls");
-	printf("\n\t| Exclui produto\n\n");
-	
-	for(i=0; i<listaCadastro->f;i++){
-		printf("\n\tnome: %s codigo: %i\n",listaCadastro->dados[i].nome,listaCadastro->dados[i].codProduto);		
-	
-	}
-	
-	printf("\n\t Informe o codigo que deseja excluir:");
-	fflush(stdin);
-	scanf("%i",&cod);
-	fflush(stdin);
-	
-	// Encontra a posição do produto no vetor que tenha o código igual ao informado pelo usuário
-	for (cont = 0; cont < listaCadastro->f; cont++)
-	{
-		if (cod == listaCadastro->dados[cont].codProduto)
-		{
-			pos = cont;
-			achou++;
-		}
-	}
-	
-	// Deleta o produto passando os da frente pra tras
-	if ( achou != 0) // começa a deletar
-	{
-		for (cont = pos; cont < listaCadastro->f; cont++ )
-		{ // DELETANDO
-			listaCadastro->dados[cont] = listaCadastro->dados[cont+1];
-			listaCadastro->f--;
-		}
-		printf("\n\t Produto excluido com sucesso!\n\n");
-		system("pause");
-	}
-		else // caso nao tenha achado
-		{
-			printf (" Não foram encontrados produtos com este código! \n\n");
-			system("pause");
-		}
-	
-	
+int procura_nodo(base *listaCadastro){
+	int posicao = -1;
+	int codigo, i;
+	printf("\n Digite o código do registro que deseja excluir: ");
+    scanf("%i", &codigo);
+    
+   	for(i=0; i < listaCadastro->f; i++)
+   		if(listaCadastro->dados[i].codProduto == codigo)
+   			posicao = i;
+   	
+   	return posicao;
 }
+void excluiProduto(base *listaCadastro){
+	int codigo, i, posicao;
+    relatorioProduto(listaCadastro);
+    posicao = procura_nodo(listaCadastro);
+    
+   	if(posicao >= 0){
+	   	for(i=posicao; i < listaCadastro->f; i++)
+	    	listaCadastro->dados[i] = listaCadastro->dados[i+1];
+		listaCadastro->f--;
+   		printf("\n Registro excluído com sucesso \n");
+	}else{
+   		printf("\n Código não encontrado \n");
+	}
+}
+
 void sair(){
 	
 	printf("\n\n Sistema finalizado com sucesso! \n\n");
@@ -194,9 +188,13 @@ void relatorioProduto(base *listaCadastro){
 	int i;
 	int dias;
 	for(i = 0; i < listaCadastro->f; i++){
+		printf("-------------------------------------------------------------------\n");
 		printf("Codigo: %i\n ", listaCadastro->dados[i].codProduto);
 		printf("Nome: %s\n ", listaCadastro->dados[i].nome);
 		printf("Descrição: %s \n", listaCadastro->dados[i].descricao);
+		printf("Quantidade: %i \n", listaCadastro->dados[i].quantidade);
+		printf("Valor unitário: %.2f \n", listaCadastro->dados[i].valor);
+		printf("Valor total: %s \n", listaCadastro->dados[i].valor*listaCadastro->dados[i].quantidade);
 		printf("Data de Validade: %s \n", listaCadastro->dados[i].dataValidade);
 		dias = prazoValidade(listaCadastro->dados[i].dataValidade, listaCadastro);
 		if(dias == 0)
@@ -207,75 +205,26 @@ void relatorioProduto(base *listaCadastro){
 			dias *= -1;			
 			printf("O produto venceu há %i dias!", dias);
 		}
-		
+		printf("\n-------------------------------------------------------------------\n");	
 	}
 	system("pause");
 }
 void ordenaProduto(base *listaCadastro){
-	
-	char escolha;
 	system("cls");
-	printf("\n\nVoce deseja ordenar de que forma? \n");
-	printf (" 1 - Código \n");
-	printf (" 2 - Validade \n");
-	printf (" 3 - Nome \n");
-	
-	fflush(stdin);
-	scanf ("%c", &escolha);
-	fflush(stdin);
 	
 	int cont1 = 0, cont2 = 0;
 	cadastro aux;
-	
-	switch (tolower(escolha)){
-		case '1': // Ordenar por código
-			// Ordenação BOLHA
-			for (cont1 = 0; cont1 < listaCadastro->f; cont1++){
-				for (cont2 = cont1+1; cont2 < listaCadastro->f; cont2++){
-					if (listaCadastro->dados[cont1].codProduto > listaCadastro->dados[cont2].codProduto){ // Caso seja menor entrará aqui e trocará a posição
-						aux = listaCadastro->dados[cont1]; // memória
-						// troca as posições
-						listaCadastro->dados[cont1] = listaCadastro->dados[cont2];
-						listaCadastro->dados[cont2] = aux;
-					}
-				}
+
+	for (cont1 = 0; cont1 < listaCadastro->f; cont1++){
+		for (cont2 = cont1+1; cont2 < listaCadastro->f; cont2++){
+			if (prazoValidade(listaCadastro->dados[cont1].dataValidade, listaCadastro) > prazoValidade(listaCadastro->dados[cont2].dataValidade, listaCadastro)){ // Caso seja menor entrará aqui e trocará a posição
+				aux = listaCadastro->dados[cont1]; // memória
+				// troca as posições
+				listaCadastro->dados[cont1] = listaCadastro->dados[cont2];
+				listaCadastro->dados[cont2] = aux;
 			}
-			printf("\n Alterado com sucesso!!!\n\n");
-			system("pause");
-			break;
-		case '2': // Ordenar por validade
-				for (cont1 = 0; cont1 < listaCadastro->f; cont1++){
-					for (cont2 = cont1+1; cont2 < listaCadastro->f; cont2++){
-						if (listaCadastro->dados[cont1].dataValidade > listaCadastro->dados[cont2].dataValidade){ // Caso seja menor entrará aqui e trocará a posição
-							aux = listaCadastro->dados[cont1]; // memória
-							// troca as posições
-							listaCadastro->dados[cont1] = listaCadastro->dados[cont2];
-							listaCadastro->dados[cont2] = aux;
-						}
-				}
-			}
-			printf("\n Alterado com sucesso!!!\n\n");
-			system("pause");
-			break;
-		case '3':
-			for (cont1 = 0; cont1 < listaCadastro->f; cont1++){
-					for (cont2 = cont1+1; cont2 < listaCadastro->f; cont2++){
-						if (strcmpi(listaCadastro->dados[cont1].nome,listaCadastro->dados[cont2].nome) > 0 ){ // Caso seja menor entrará aqui e trocará a posição
-							aux = listaCadastro->dados[cont1]; // memória
-							// troca as posições
-							listaCadastro->dados[cont1] = listaCadastro->dados[cont2];
-							listaCadastro->dados[cont2] = aux;
-						}
-				}
-			}
-			printf("\n Alterado com sucesso!!!\n\n");
-			system("pause");
-			break;
-			default:
-				printf("\n Opção invalida!!!\n\n");
-				system("pause");
+		}
 	}
-	
 }
 int quantidadeDiasMes(int mes){
 	switch(mes){

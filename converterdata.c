@@ -43,19 +43,26 @@ int quantidadeDiasMes(int mes){
 	}
 }
 int converterData(char data[]){
-    int i, soma, j = 0; //Inicializando as variaveis
-    char *p = strtok (data, "/"); //Iniciando a separação da data por barras
-    char *array[3]; //Vetor que receberá os valores separados
-
-    while (p != NULL){ //Separando a data por barras
-        array[i++] = p;
-        p = strtok (NULL, "/");
-    }
+    int soma, j= 0; //Inicializando as variaveis
+    char array[3][3]; //Vetor que receberá os valores separados
 	
+
+	array[0][0] = data[0];
+	array[0][1] = data[1];
+	
+	array[1][0] = data[3];
+	array[1][1] = data[4];
+	
+	array[2][0] = data[6];
+	array[2][1] = data[7];
+	array[2][2] = data[8];
+	array[2][3] = data[9];
+		
+		
 	//array[0] = dia
 	//array[1] = mes
 	//array[2] = ano
-	
+
 	soma = atoi(array[0]); //Soma os dias
 	
 	for(j = 1; j < atoi(array[1]); j++) //Percorre os meses
@@ -63,6 +70,7 @@ int converterData(char data[]){
 	
 	soma += (atoi(array[2])*365); // soma os anos
 	
+
 	return soma; //retorna a soma de dias
 }
 
@@ -103,7 +111,6 @@ int prazoValidade(char data[]){
 }
 
 void main (){
-	char data[10];
-	gets(data);
-    printf("%i\n\n", prazoValidade(data));
+	char data[10] = "06/04/2017";
+    printf("%i\n\n", converterData(data));
 }
