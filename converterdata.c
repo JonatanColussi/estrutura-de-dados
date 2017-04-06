@@ -56,9 +56,6 @@ int converterData(char data[]){
 	//array[1] = mes
 	//array[2] = ano
 	
-	printf("dia %i\n", atoi(array[0]));
-	printf("mes %i\n", atoi(array[1]));
-	printf("ano %i\n\n", atoi(array[2]));
 	soma = atoi(array[0]); //Soma os dias
 	
 	for(j = 1; j < atoi(array[1]); j++) //Percorre os meses
@@ -101,10 +98,11 @@ int diaAtual(){
     return converterData(data);
 }
 
+int prazoValidade(char data[]){
+	return converterData(data)-diaAtual();
+}
+
 void main (){
-	char data[10] = "06/04/2017";
-    printf("%i\n\n", converterData(data));
-    
-    printf("\n");
-    printf("%i", diaAtual());
+	char data[10] = "01/04/2017";
+    printf("%i\n\n", prazoValidade(data));
 }
