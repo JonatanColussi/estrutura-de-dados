@@ -199,15 +199,13 @@ void relatorioProduto(base *listaCadastro){
 		printf("Descrição: %s \n", listaCadastro->dados[i].descricao);
 		printf("Data de Validade: %s \n", listaCadastro->dados[i].dataValidade);
 		dias = prazoValidade(listaCadastro->dados[i].dataValidade, listaCadastro);
-		printf("\n\n%i\n\n",listaCadastro->diaAtual);
-		printf("\n\n%i\n\n",converterData(listaCadastro->dados[i].dataValidade));
 		if(dias == 0)
 			printf("O produto vence hoje!");
 		else if(dias > 0)
-			printf("O produto vence em %i dias!", &dias);
+			printf("O produto vence em %i dias!", dias);
 		else{
 			dias *= -1;			
-			printf("O produto venceu há %i dias!", &dias);
+			printf("O produto venceu há %i dias!", dias);
 		}
 		
 	}
@@ -320,25 +318,26 @@ int quantidadeDiasMes(int mes){
 	}
 }
 int converterData(char data[]){
-    int i, soma, j, k = 0; //Inicializando as variaveis
-    char *array[3]; //Vetor que receberá os valores separados
+    int soma, j= 0; //Inicializando as variaveis
+    char array[3][3]; //Vetor que receberá os valores separados
 	
-	array[0] = data[0];//dia
-	strcat(array[0], data[1]);//dia
-	strcpy(array[1], data[3]);//mês
-	strcat(array[1], data[4]);//mês
-	strcpy(array[2], data[6]);//ano
-	strcat(array[2], data[7]);//ano
-	strcat(array[2], data[8]);//ano
-	strcat(array[2], data[9]);//ano
+
+	array[0][0] = data[0];
+	array[0][1] = data[1];
 	
+	array[1][0] = data[3];
+	array[1][1] = data[4];
 	
+	array[2][0] = data[6];
+	array[2][1] = data[7];
+	array[2][2] = data[8];
+	array[2][3] = data[9];
+		
+		
 	//array[0] = dia
 	//array[1] = mes
 	//array[2] = ano
-	printf("\n dias%s\n\n", array[0]);
-	printf("\n meses%s\n\n", array[1]);
-	printf("\n anos%s\n\n", array[2]);
+
 	soma = atoi(array[0]); //Soma os dias
 	
 	for(j = 1; j < atoi(array[1]); j++) //Percorre os meses
@@ -346,8 +345,6 @@ int converterData(char data[]){
 	
 	soma += (atoi(array[2])*365); // soma os anos
 	
-	for(k=0; k <= 2; k++)
-		array[k] = 0;
 
 	return soma; //retorna a soma de dias
 }
