@@ -397,14 +397,22 @@ void remover_registro(LISTA** l){
         printf("\n Lista vazia!");
 }
 
+/***************************************************************** 
+ * validarZona                                                   *
+ * objetivo: função para validar se a zona digitada está correta *
+ * entrada : char[1]                                             *
+ * saida   : int                                                 *
+ *****************************************************************/ 
 int validarZona(char zona[1]){
 	switch(zona[0]){
     	case 'N':
     	case 'S':
     	case 'L':
     	case 'O':
+    		//se a zona digitada está ná lista, retorna 0, ou seja false. Esse retorno será usado como erro
     		return 0;
     	default:
+    		//se a zona digitada não está ná lista, retorna 1, ou seja true. Esse retorno será usado como erro
     		return 1;
 	}
 }
