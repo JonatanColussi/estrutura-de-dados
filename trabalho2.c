@@ -177,22 +177,7 @@ void inserir_registro(LISTA** p){
  * entrada : lista e codigo a ser procurado     *
  * saída   : posicao ou NULL (não encontrou)    *
  ************************************************/ 
-LISTA* procura_nodo( LISTA* p, int cod )
-{ 
-    LISTA *no = ( LISTA *) malloc (sizeof (LISTA));
 
-    if (p == NULL)
-        printf("\n Lista vazia!"); 
-        else
-        {
-
-            while(p->info.codigo != cod)
-                p = p->prox;
-            
-            return p;
-        }
-    
-}
 
 /*************************************************
  * imprime_lista                                 *
