@@ -59,19 +59,19 @@ main(){
     criar_lista(&p);
     setlocale (LC_ALL, "Portuguese");
     while(1){
-         printf( "\n /---------------------------------------------------/" ); 
-         printf( "\n Programa de cadastro de entidades                    " );
-         printf( "\n [1] Criar lista                                       " );
-         printf( "\n [2] Inserir registro                                 " );
-         printf( "\n [3] Remover registro                                 " );
-         printf( "\n [4] Imprimir lista                                    " );
-         printf( "\n [5] Odenar lista                                     " );
-         printf( "\n [0] Para sair do programa                            " );
-         printf( "\n /---------------------------------------------------/" );      
-         printf( "\n Opcao: " );
-         op = getche();
+		printf( "\n /---------------------------------------------------/" ); 
+		printf( "\n Programa de cadastro de entidades                    " );
+		printf( "\n [1] Criar lista                                       " );
+		printf( "\n [2] Inserir registro                                 " );
+		printf( "\n [3] Remover registro                                 " );
+		printf( "\n [4] Imprimir lista                                    " );
+		printf( "\n [5] Odenar lista                                     " );
+		printf( "\n [0] Para sair do programa                            " );
+		printf( "\n /---------------------------------------------------/" );      
+		printf( "\n Opcao: " );
+		op = getche();
 
-         switch( op ) {
+        switch(op) {
            case '1':
                 criar_lista(&p);
                 break;
@@ -100,11 +100,9 @@ main(){
                 printf( "\n Digite uma opção!" );
                 break;
         }
-
-       
+        
         fflush(stdin);
         getchar();
-        
         printf( "\n" );
     }
 }
@@ -113,7 +111,7 @@ main(){
  * entrada_dados                                *
  * objetivo: rotina para ler dados              *
  * entrada : nodo (ponteiro para o novo espaço) *
- * saida   : nodo com dados                     *
+ * saida   : nenhuma                            *
  ************************************************/
 void entrada_dados(LISTA* aux){
 	int error = 0;
@@ -134,20 +132,25 @@ void entrada_dados(LISTA* aux){
     gets(aux->info.telefone);
     
     printf("\n Informe a zona [N, S, L, O]: ");
-    do{
+    do{//obriga o usuário a escolher uma das zonas
 	    fflush(stdin);// limpa buffer do teclado
 	    gets(aux->info.zona);
+	    //Converte a entrada em letra maiuscula
 	    aux->info.zona[0] = toupper(aux->info.zona[0]);
+	    //verifica se a zona digitada está certa
 	    error = validarZona(aux->info.zona);
+	    //Caso esteja errado, repete o processo
 		if(error){
 	    	printf("\n\t ZONA INVÁLIDA!");
    			printf("\n Informe a zona [N, S, L, O]: ");
 			fflush(stdin);// limpa buffer do teclado
 	    	gets(aux->info.zona);
-	    	aux->info.zona[0] = toupper(aux->info.zona[0]);
-			error = validarZona(aux->info.zona);
+	    	//Converte a entrada em letra maiuscula
+		    aux->info.zona[0] = toupper(aux->info.zona[0]);
+		    //verifica se a zona digitada está certa
+		    error = validarZona(aux->info.zona);
 		}
-	}while(error);
+	}while(error);//repete até enquanto houverem erros
     
 	aux->prox= NULL;
 }
@@ -159,7 +162,7 @@ void entrada_dados(LISTA* aux){
  * saÃ­da   : NULL (inicializa lista)            *
  ************************************************/ 
 void criar_lista(LISTA** p){
-	*p = NULL;
+	*p = NULL; //aponta a lista para NULL
 }
 
 /*************************************************** 
@@ -184,52 +187,42 @@ void inserir_registro(LISTA** p){
 		printf("\n Lista Cheia \n");
 }
 
-/************************************************ 
- * procura_nodo                                 *
- * objetivo: achar um registro por codigo       *
- * entrada : lista e codigo a ser procurado     *
- * saÃ­da   : posicao ou NULL (nÃ£o encontrou)    *
- ************************************************/ 
-
-
 /*************************************************
  * imprime_lista                                 *
  * objetivo: rotina para imprimir dados          *
  * entrada : lista                               *
  * saida   : nenhuma                             *
  *************************************************/ 
-void imprime_lista( LISTA* aux )
-{
-	 if( aux == NULL )
-	     printf("\n Lista vazia");
-	 else{
-	     LISTA *p = aux; //iniciliza o ponteiro auxiliar p
-	     while( p != NULL ){ //p percorre a lista até o fim
-	     	    printf("\n Nome: %s", p->info.nome);
-	     	    printf("\n Codigo: %i", p->info.codigo);
-                printf("\n Endereço: %s", p->info.endereco);
-                printf("\n Telefone: %s", p->info.telefone);
-                printf("\n Zona ");
-                switch(p->info.zona[0]){
-                	case 'N':
-                		printf("Norte");
-                		break;
-                	case 'S':
-                		printf("Sul");
-                		break;
-                	case 'L':
-                		printf("Leste");
-                		break;
-                	case 'O':
-                		printf("Oeste");
-                		break;
-				}
-				printf("\n---------------------\n");
-	     	    p= p->prox; //anda pela lista
-		 }    
+void imprime_lista( LISTA* aux ){
+	if( aux == NULL )
+	    printf("\n Lista vazia");
+	else{
+	    LISTA *p = aux; //iniciliza o ponteiro auxiliar p
+	    while( p != NULL ){ //p percorre a lista até o fim
+     	    printf("\n Nome: %s", p->info.nome);
+     	    printf("\n Codigo: %i", p->info.codigo);
+            printf("\n Endereço: %s", p->info.endereco);
+            printf("\n Telefone: %s", p->info.telefone);
+            printf("\n Zona ");
+            switch(p->info.zona[0]){
+            	case 'N':
+            		printf("Norte");
+            		break;
+            	case 'S':
+            		printf("Sul");
+            		break;
+            	case 'L':
+            		printf("Leste");
+            		break;
+            	case 'O':
+            		printf("Oeste");
+            		break;
+			}
+			printf("\n---------------------\n");
+	     	p= p->prox; //anda pela lista
+		}    
 	          
-	 }
-
+	}
 }
 
 /*************************************************** 
@@ -238,8 +231,7 @@ void imprime_lista( LISTA* aux )
  * entrada : lista                                 *
  * saida   : lista ordenada por codigo             *
  ***************************************************/ 
-void ordena_lista( LISTA** l )
-{
+void ordena_lista( LISTA** l ){
     if(*l == NULL)
         printf("\n Lista vazia!");
     else{
@@ -250,125 +242,115 @@ void ordena_lista( LISTA** l )
             LISTA *ant = *l;
             LISTA *p = ant->prox;
         
-        char ord;
-
-         printf( "\n /---------------------------------------------------/" ); 
-         printf( "\n Selecione o Campo de OredenaÃ§Ã£o                      " );
-         printf( "\n [1] Código                                           " );
-         printf( "\n [2] Nome                                             " );
-         printf( "\n [3] Telefone                                         " );
-         printf( "\n [4] Endereço                                         " );
-         printf( "\n [5] Zona                                             " );
-         printf( "\n [0] Cancelar                                         " );
-         printf( "\n /---------------------------------------------------/" );      
-         printf( "\n Opcao: " );
-         fflush(stdin);
-         ord = getchar();
-
-         switch( ord ) { // Escolhe o campo a ser ordenado
-           case '1':
-            
-            while( ant->prox != NULL) {
-                while (p != NULL){
-                    if(p->info.codigo < ant->info.codigo)
-                    {
-                        aux = p->info;
-                        p->info = ant->info;
-                        ant->info = aux;
-                    }
-                    p = p->prox;
-                }
-                ant= ant->prox;
-                p = ant->prox;
-            }
-            
-                break;
-                                
-           case '2':
-           
-             while( ant->prox != NULL) {
-                while (p != NULL){
-                    if(strcmp(p->info.nome,ant->info.nome) < 0) // Compara strings -1 menor, 0 igual, 1 maior
-                    {
-                        aux = p->info;
-                        p->info = ant->info;
-                        ant->info = aux;
-                    }
-                    p = p->prox;
-                }
-                ant= ant->prox;
-                p = ant->prox;
-            }
-           
-                break;
-           
-           case '3':
-                
-            while( ant->prox != NULL) {
-                while (p != NULL){
-                    if(p->info.telefone < ant->info.telefone)
-                    {
-                        aux = p->info;
-                        p->info = ant->info;
-                        ant->info = aux;
-                    }
-                    p = p->prox;
-                }
-                ant= ant->prox;
-                p = ant->prox;
-            }
-
-                break;
-                                                                            
-           case '4':               
-                
-            while( ant->prox != NULL) {
-                while (p != NULL){
-                    if(strcmp(p->info.endereco, ant->info.endereco) < 0)
-                    {
-                        aux = p->info;
-                        p->info = ant->info;
-                        ant->info = aux;
-                    }
-                    p = p->prox;
-                }
-                ant= ant->prox;
-                p = ant->prox;
-            }
-
-                break;
-                
-            case '5':
-                
-            while( ant->prox != NULL) {
-                while (p != NULL){
-                    if(strcmp(p->info.zona, ant->info.zona) < 0 )
-                    {
-                        aux = p->info;
-                        p->info = ant->info;
-                        ant->info = aux;
-                    }
-                    p = p->prox;
-                }
-                ant= ant->prox;
-                p = ant->prox;
-            }
-
-                break;
-                                
-           case '0':                                           
-                break;
-                
-           default : 
-                printf( "\n Opção inválida!" );
-                break;
-        }
-
-
-    }
-
+	        char ord;
+	
+	        printf( "\n /---------------------------------------------------/" ); 
+	        printf( "\n Selecione o Campo de Oredenação                    " );
+	        printf( "\n [1] Código                                           " );
+	        printf( "\n [2] Nome                                             " );
+	        printf( "\n [3] Telefone                                         " );
+	        printf( "\n [4] Endereço                                         " );
+	        printf( "\n [5] Zona                                             " );
+	        printf( "\n [0] Cancelar                                         " );
+	        printf( "\n /---------------------------------------------------/" );      
+	        printf( "\n Opcao: " );
+	        fflush(stdin);
+	        ord = getchar();
+	
+	        switch(ord){ // Escolhe o campo a ser ordenado
+	           case '1':
+		            while(ant->prox != NULL) {
+		                while (p != NULL){
+		                    if(p->info.codigo < ant->info.codigo){
+		                        aux = p->info;
+		                        p->info = ant->info;
+		                        ant->info = aux;
+		                    }
+		                    p = p->prox;
+		                }
+		                ant= ant->prox;
+		                p = ant->prox;
+		            }
+	                break;
+	                                
+	           	case '2':
+		            while(ant->prox != NULL){
+		                while (p != NULL){
+		                    if(strcmp(p->info.nome,ant->info.nome) < 0){ // Compara strings -1 menor, 0 igual, 1 maior
+		                        aux = p->info;
+		                        p->info = ant->info;
+		                        ant->info = aux;
+		                    }
+		                    p = p->prox;
+		                }
+		                ant= ant->prox;
+		                p = ant->prox;
+		            }
+		           
+		            break;
+	           
+	           	case '3':
+		            while(ant->prox != NULL) {
+		                while (p != NULL){
+		                    if(p->info.telefone < ant->info.telefone){
+		                        aux = p->info;
+		                        p->info = ant->info;
+		                        ant->info = aux;
+		                    }
+		                    p = p->prox;
+		                }
+		                ant= ant->prox;
+		                p = ant->prox;
+		            }
+	                break;
+	                                                                            
+	           case '4':                 
+		            while(ant->prox != NULL) {
+		                while (p != NULL){
+		                    if(strcmp(p->info.endereco, ant->info.endereco) < 0){
+		                        aux = p->info;
+		                        p->info = ant->info;
+		                        ant->info = aux;
+		                    }
+		                    p = p->prox;
+		                }
+		                ant= ant->prox;
+		                p = ant->prox;
+		        	}
+	                break;
+	                
+	            case '5':
+		            while(ant->prox != NULL) {
+		                while (p != NULL){
+		                    if(strcmp(p->info.zona, ant->info.zona) < 0){
+		                        aux = p->info;
+		                        p->info = ant->info;
+		                        ant->info = aux;
+		                    }
+		                    p = p->prox;
+		                }
+		                ant= ant->prox;
+		                p = ant->prox;
+		            }
+	                break;
+	                                
+	           case '0':                                           
+	                break;
+	                
+	           default : 
+	                printf( "\n Opção inválida!" );
+	                break;
+	        }
+	    }
+	}
 }
-}
+
+/************************************************ 
+ * procura_nodo                                 *
+ * objetivo: achar um registro por codigo       *
+ * entrada : lista e codigo a ser procurado     *
+ * saÃ­da   : posicao ou NULL (nÃ£o encontrou)    *
+ ************************************************/ 
 
 LISTA* procura_nodo( LISTA *p, int cod ){
 	while(p->info.codigo != cod){ // repete ate encontrar o cod desejado
@@ -379,7 +361,12 @@ LISTA* procura_nodo( LISTA *p, int cod ){
 	return p; 		// encontrou, retorna o endereco do cod desejado
 }
 
-
+/*************************************************** 
+ * remover_registro                                *
+ * objetivo: rotina para excluir registro da lista *
+ * entrada : lista                                 *
+ * saida   : lista                                 *
+ ***************************************************/ 
 
 void remover_registro(LISTA** l){
 	int cod;      // codigo a ser excluido 
@@ -390,8 +377,7 @@ void remover_registro(LISTA** l){
     fflush( stdin );                        // limpa buffer do teclado e faz a entrada de dados
     scanf( "%d", &cod );              
     
-    if(*l != NULL)
-	{                       // verifica se a lista esta vazia 
+    if(*l != NULL){                       // verifica se a lista esta vazia 
         no = procura_nodo(*l, cod);       // procura codigo de referencia, a ser excluida
         if((cod == no->info.codigo) && (no != NULL)){ // verifica se encontrou a codigo na lista
             p = *l;                         // ponteiro auxiliar aponta para o inicio da lista
