@@ -7,7 +7,7 @@
 /* programador: Jonatan Colussi                */
 /* programador: Felipe Santos da Silva         */
 /* criado em: 09/05/2017                       */
-/* data da ultima alteracao: 11/05/2017        */
+/* data da ultima alteraÁ„o: 11/05/2017        */
 /***********************************************/ 
 
 #include <stdio.h>
@@ -15,10 +15,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <locale.h>
+#include <ctype.h>
 
 
 /***********************************************/ 
-/* Defini√ß√£o dos Registros                     */
+/* DefiniÁ„o dos Registros                     */
 /***********************************************/ 
 typedef struct{
     int  codigo;
@@ -35,31 +37,32 @@ typedef struct LISTA {
 
 
 /***********************************************/ 
-/* Defini√ß√£oo das Fun√ß√µes                       */
+/* DefiniÁ„oo das FunÁıes                      */
 /***********************************************/ 
 void entrada_dados(LISTA* aux); // leitura dos dados de entrada
-void imprime_lista(LISTA* aux); // visualizacao da lista em tela
+void imprime_lista(LISTA* aux); // visualizaÁ„o da lista em tela
 void criar_lista(LISTA** p); // inicializa lista com NULL
 void ordena_lista(LISTA** p); // ordena lista por campo a ser escolhido
 void inserir_registro(LISTA** p); // inclui um novo registro no inicio da lista
-LISTA*  procura_nodo( LISTA* p, int cod ); // procura na lista por uma codigo
-void remover_registro(LISTA** p); // exclui um regitro por codigo 
+LISTA* procura_nodo( LISTA* p, int cod ); // procura na lista por uma cÛdigo
+void remover_registro(LISTA** p); // exclui um regitro por cÛdigo 
 
 
 /***********************************************/ 
 /* Programa Principal                          */
 /***********************************************/ 
-int main ( void ){
+main(){
     char op;                            
     LISTA* p;
-    
+    criar_lista(&p);
+    setlocale (LC_ALL, "Portuguese");
     while(1){
          printf( "\n /---------------------------------------------------/" ); 
          printf( "\n Programa de cadastro de entidades                    " );
-         printf( "\n [1] Cria lista                                       " );
+         printf( "\n [1] Criar lista                                       " );
          printf( "\n [2] Inserir registro                                 " );
          printf( "\n [3] Remover registro                                 " );
-         printf( "\n [4] Imprime lista                                    " );
+         printf( "\n [4] Imprimir lista                                    " );
          printf( "\n [5] Odenar lista                                     " );
          printf( "\n [0] Para sair do programa                            " );
          printf( "\n /---------------------------------------------------/" );      
@@ -92,7 +95,7 @@ int main ( void ){
                 break;
                 
            default : 
-                printf( "\n Digite uma opcao!" );
+                printf( "\n Digite uma opÁ„o!" );
                 break;
         }
 
@@ -107,11 +110,11 @@ int main ( void ){
 /************************************************ 
  * entrada_dados                                *
  * objetivo: rotina para ler dados              *
- * entrada : nodo (ponteiro para o novo espaco) *
+ * entrada : nodo (ponteiro para o novo espaÁo) *
  * saida   : nodo com dados                     *
  ************************************************/
 void entrada_dados(LISTA* aux){
-	printf("\n\n Digite o c√≥digo: "); 
+	printf("\n\n Digite o cÛdigo: "); 
     fflush( stdin );// limpa buffer do teclado
     scanf("%d", &aux->info.codigo);
 
@@ -119,7 +122,7 @@ void entrada_dados(LISTA* aux){
     fflush(stdin);// limpa buffer do teclado
     gets(aux->info.nome);
     
-    printf("\n Digite o endere√ßo da entidade: ");
+    printf("\n Digite o endereÁo da entidade: ");
     fflush(stdin);// limpa buffer do teclado
     gets(aux->info.endereco);
     
@@ -127,16 +130,23 @@ void entrada_dados(LISTA* aux){
     fflush(stdin);// limpa buffer do teclado
     gets(aux->info.telefone);
     
-    printf("\n Informa a zona [N, S, L, O]: ");
-    //do{
+    printf("\n Informe a zona [N, S, L, O, C]: ");
+    do{
 	    fflush(stdin);// limpa buffer do teclado
 	    gets(aux->info.zona);
+	    aux->info.zona[0] = toupper(aux->info.zona[0]);
 	    
-	/*    if(aux->info.zona[0] != 'N' || aux->info.zona[0] != 'S' || aux->info.zona[0] != 'L' || aux->info.zona[0] != 'O')
-	    	printf("\n\t ZONA INV√ÅLIDA!");
-	}while(aux->info.zona[0] != 'N' || aux->info.zona[0] != 'S' || aux->info.zona[0] != 'L' || aux->info.zona[0] != 'O');
-  */
-    aux->prox= NULL;     // n√£o aponta
+		if(aux->info.zona[0] != 'N' || aux->info.zona[0] != 'S' || aux->info.zona[0] != 'L' || aux->info.zona[0] != 'O' || aux->info.zona[0] != 'C'){
+	    	printf("\n\t ZONA INV¡LIDA!");
+   			printf("\n Informe a zona [N, S, L, O, C]: ");
+			fflush(stdin);// limpa buffer do teclado
+	    	gets(aux->info.zona);
+	    	aux->info.zona[0] = toupper(aux->info.zona[0]);
+		}
+		
+	}while(aux->info.zona[0] != 'N' && aux->info.zona[0] != 'S' && aux->info.zona[0] != 'L' && aux->info.zona[0] != 'O' && aux->info.zona[0] != 'C');
+    
+	aux->prox= NULL;
 }
 
 /************************************************
@@ -191,13 +201,30 @@ void imprime_lista( LISTA* aux )
 	     printf("\n Lista vazia");
 	 else{
 	     LISTA *p = aux; //iniciliza o ponteiro auxiliar p
-	     while( p != NULL ){ //p percorre a lista at√© o fim
+	     while( p != NULL ){ //p percorre a lista atÈ o fim
 	     	    printf("\n Nome: %s", p->info.nome);
 	     	    printf("\n Codigo: %i", p->info.codigo);
-                printf("\n Endere√ßo: %s", p->info.endereco);
+                printf("\n EndereÁo: %s", p->info.endereco);
                 printf("\n Telefone: %s", p->info.telefone);
-                printf("\n Zona: %s", p->info.zona);
-
+                printf("\n Zona ");
+                switch(p->info.zona[0]){
+                	case 'N':
+                		printf("Norte");
+                		break;
+                	case 'S':
+                		printf("Sul");
+                		break;
+                	case 'L':
+                		printf("Leste");
+                		break;
+                	case 'O':
+                		printf("Oeste");
+                		break;
+                	case 'C':
+                		printf("Central");
+                		break;
+				}
+				printf("\n---------------------\n");
 	     	    p= p->prox; //anda pela lista
 		 }    
 	          
@@ -227,10 +254,10 @@ void ordena_lista( LISTA** l )
 
          printf( "\n /---------------------------------------------------/" ); 
          printf( "\n Selecione o Campo de Oredena√ß√£o                      " );
-         printf( "\n [1] C√≥digo                                           " );
+         printf( "\n [1] CÛdigo                                           " );
          printf( "\n [2] Nome                                             " );
          printf( "\n [3] Telefone                                         " );
-         printf( "\n [4] Endere√ßo                                         " );
+         printf( "\n [4] EndereÁo                                         " );
          printf( "\n [5] Zona                                             " );
          printf( "\n [0] Cancelar                                         " );
          printf( "\n /---------------------------------------------------/" );      
@@ -333,7 +360,7 @@ void ordena_lista( LISTA** l )
                 break;
                 
            default : 
-                printf( "\n Op√ß√£o inv√°lida!" );
+                printf( "\n OpÁ„o inv·lida!" );
                 break;
         }
 
