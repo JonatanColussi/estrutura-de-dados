@@ -46,6 +46,7 @@ void ordena_lista(LISTA** p); // ordena lista por campo a ser escolhido
 void inserir_registro(LISTA** p); // inclui um novo registro no inicio da lista
 LISTA* procura_nodo( LISTA* p, int cod ); // procura na lista por código
 void remover_registro(LISTA** l); // exclui um regitro por código 
+int validarZona(char zona[1]); // valida se a zona é válida
 
 
 /***********************************************/ 
@@ -98,11 +99,9 @@ main(){
                 printf( "\n Digite uma opção!" );
                 break;
         }
-
-       
+        
         fflush(stdin);
         getchar();
-        
         printf( "\n" );
     }
 }
@@ -111,9 +110,10 @@ main(){
  * entrada_dados                                *
  * objetivo: rotina para ler dados              *
  * entrada : nodo (ponteiro para o novo espaço) *
- * saida   : nodo com dados                     *
+ * saida   : nenhuma                            *
  ************************************************/
 void entrada_dados(LISTA* aux){
+	int error = 0;
 	printf("\n\n Digite o código: "); 
     fflush( stdin );// limpa buffer do teclado
     scanf("%d", &aux->info.codigo);
@@ -130,21 +130,26 @@ void entrada_dados(LISTA* aux){
     fflush(stdin);// limpa buffer do teclado
     gets(aux->info.telefone);
     
-    printf("\n Informe a zona [N, S, L, O, C]: ");
-    do{
+    printf("\n Informe a zona [N, S, L, O]: ");
+    do{//obriga o usuário a escolher uma das zonas
 	    fflush(stdin);// limpa buffer do teclado
 	    gets(aux->info.zona);
+	    //Converte a entrada em letra maiuscula
 	    aux->info.zona[0] = toupper(aux->info.zona[0]);
-	    
-		if(aux->info.zona[0] != 'N' || aux->info.zona[0] != 'S' || aux->info.zona[0] != 'L' || aux->info.zona[0] != 'O' || aux->info.zona[0] != 'C'){
+	    //verifica se a zona digitada está certa
+	    error = validarZona(aux->info.zona);
+	    //Caso esteja errado, repete o processo
+		if(error){
 	    	printf("\n\t ZONA INVÁLIDA!");
-   			printf("\n Informe a zona [N, S, L, O, C]: ");
+   			printf("\n Informe a zona [N, S, L, O]: ");
 			fflush(stdin);// limpa buffer do teclado
 	    	gets(aux->info.zona);
-	    	aux->info.zona[0] = toupper(aux->info.zona[0]);
+	    	//Converte a entrada em letra maiuscula
+		    aux->info.zona[0] = toupper(aux->info.zona[0]);
+		    //verifica se a zona digitada está certa
+		    error = validarZona(aux->info.zona);
 		}
-		
-	}while(aux->info.zona[0] != 'N' && aux->info.zona[0] != 'S' && aux->info.zona[0] != 'L' && aux->info.zona[0] != 'O' && aux->info.zona[0] != 'C');
+	}while(error);//repete até enquanto houverem erros
     
 	aux->prox= NULL;
 }
@@ -156,7 +161,7 @@ void entrada_dados(LISTA* aux){
  * saída   : NULL (inicializa lista)            *
  ************************************************/ 
 void criar_lista(LISTA** p){
-	*p = NULL;
+	*p = NULL; //aponta a lista para NULL
 }
 
 /*************************************************** 
@@ -181,55 +186,42 @@ void inserir_registro(LISTA** p){
 		printf("\n Lista Cheia \n");
 }
 
-/************************************************ 
- * procura_nodo                                 *
- * objetivo: achar um registro por codigo       *
- * entrada : lista e codigo a ser procurado     *
- * saída   : posicao ou NULL (não encontrou)    *
- ************************************************/ 
-
-
 /*************************************************
  * imprime_lista                                 *
  * objetivo: rotina para imprimir dados          *
  * entrada : lista                               *
  * saida   : nenhuma                             *
  *************************************************/ 
-void imprime_lista( LISTA* aux )
-{
-	 if( aux == NULL )
-	     printf("\n Lista vazia");
-	 else{
-	     LISTA *p = aux; //iniciliza o ponteiro auxiliar p
-	     while( p != NULL ){ //p percorre a lista até o fim
-	     	    printf("\n Nome: %s", p->info.nome);
-	     	    printf("\n Codigo: %i", p->info.codigo);
-                printf("\n Endereço: %s", p->info.endereco);
-                printf("\n Telefone: %s", p->info.telefone);
-                printf("\n Zona ");
-                switch(p->info.zona[0]){
-                	case 'N':
-                		printf("Norte");
-                		break;
-                	case 'S':
-                		printf("Sul");
-                		break;
-                	case 'L':
-                		printf("Leste");
-                		break;
-                	case 'O':
-                		printf("Oeste");
-                		break;
-                	case 'C':
-                		printf("Central");
-                		break;
-				}
-				printf("\n---------------------\n");
-	     	    p= p->prox; //anda pela lista
-		 }    
+void imprime_lista( LISTA* aux ){
+	if( aux == NULL )
+	    printf("\n Lista vazia");
+	else{
+	    LISTA *p = aux; //iniciliza o ponteiro auxiliar p
+	    while( p != NULL ){ //p percorre a lista até o fim
+     	    printf("\n Nome: %s", p->info.nome);
+     	    printf("\n Codigo: %i", p->info.codigo);
+            printf("\n Endereço: %s", p->info.endereco);
+            printf("\n Telefone: %s", p->info.telefone);
+            printf("\n Zona ");
+            switch(p->info.zona[0]){
+            	case 'N':
+            		printf("Norte");
+            		break;
+            	case 'S':
+            		printf("Sul");
+            		break;
+            	case 'L':
+            		printf("Leste");
+            		break;
+            	case 'O':
+            		printf("Oeste");
+            		break;
+			}
+			printf("\n---------------------\n");
+	     	p= p->prox; //anda pela lista
+		}    
 	          
-	 }
-
+	}
 }
 
 /*************************************************** 
@@ -249,7 +241,7 @@ void ordena_lista( LISTA** l )                // Função para ordenar lista
             ENTIDADE aux;
             LISTA *ant = *l;                 // cria ponteiro auxiliar para lista 
             LISTA *p = ant->prox;            // cria ponteiro auxiliar para o próximo
-        
+
         char ord; 							// cria variável de seleção do menu
 
          printf( "\n /---------------------------------------------------/" ); 
@@ -368,7 +360,15 @@ void ordena_lista( LISTA** l )                // Função para ordenar lista
     }
 
 }
+
 }
+
+/************************************************ 
+ * procura_nodo                                 *
+ * objetivo: achar um registro por codigo       *
+ * entrada : lista e codigo a ser procurado     *
+ * saÃ­da   : posicao ou NULL (nÃ£o encontrou)    *
+ ************************************************/ 
 
 LISTA* procura_nodo( LISTA *p, int cod ){
 	while(p->info.codigo != cod){ // repete ate encontrar o cod desejado
@@ -379,7 +379,12 @@ LISTA* procura_nodo( LISTA *p, int cod ){
 	return p; 		// encontrou, retorna o endereco do cod desejado
 }
 
-
+/*************************************************** 
+ * remover_registro                                *
+ * objetivo: rotina para excluir registro da lista *
+ * entrada : lista                                 *
+ * saida   : lista                                 *
+ ***************************************************/ 
 
 void remover_registro(LISTA** l){
 	int cod;      // codigo a ser excluido 
@@ -390,8 +395,7 @@ void remover_registro(LISTA** l){
     fflush( stdin );                        // limpa buffer do teclado e faz a entrada de dados
     scanf( "%d", &cod );              
     
-    if(*l != NULL)
-	{                       // verifica se a lista esta vazia 
+    if(*l != NULL){                       // verifica se a lista esta vazia 
         no = procura_nodo(*l, cod);       // procura codigo de referencia, a ser excluida
         if((cod == no->info.codigo) && (no != NULL)){ // verifica se encontrou a codigo na lista
             p = *l;                         // ponteiro auxiliar aponta para o inicio da lista
@@ -409,4 +413,16 @@ void remover_registro(LISTA** l){
              printf("\n Nodo nao encontrado!");
     }else
         printf("\n Lista vazia!");
+}
+
+int validarZona(char zona[1]){
+	switch(zona[0]){
+    	case 'N':
+    	case 'S':
+    	case 'L':
+    	case 'O':
+    		return 0;
+    	default:
+    		return 1;
+	}
 }
