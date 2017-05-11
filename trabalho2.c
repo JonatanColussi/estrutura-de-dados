@@ -46,7 +46,7 @@ void criar_lista(LISTA** p); // inicializa lista com NULL
 void ordena_lista(LISTA** p); // ordena lista por campo a ser escolhido
 void inserir_registro(LISTA** p); // inclui um novo registro no inicio da lista
 LISTA* procura_nodo( LISTA* p, int cod ); // procura na lista por código
-void remover_registro(LISTA** p); // exclui um regitro por código 
+void remover_registro(LISTA** l); // exclui um regitro por código 
 
 
 /***********************************************/ 
@@ -382,36 +382,32 @@ LISTA* procura_nodo( LISTA *p, int cod ){
 
 
 
-void remover_registro(LISTA** p){
-	if(*l != NULL){
-		int cod = 0;
-		LISTA *p = *l;
-		LISTA *pc = p;
-		printf("\n\n  Digite o codigo do registro para exclusao: ");
-		fflush(stdin);
-		scanf("%d",&cod);
-		p = procura_nodo(p, cod);
-		
-		if(p != NULL){
-			if(pc==p){
-				*l=p->prox;
-				pc->prox=p->prox;
-				free(p);
-				printf("funcionou");
-			}else{
-				while(pc->prox!=p){
-					pc=pc->prox;
-					pc->prox=p->prox;
-					free(p);
-					p=NULL;
-				printf("Aqui tambem ");
-				}
-			}
-		}else{
-			printf(" Codigo não encontado");
-		}	
-		
-	}else{
-		printf(" Lista Vazia");
-	}
+void remover_registro(LISTA** l){
+	int cod;      // codigo a ser excluido 
+    LISTA* p;     // ponteiro auxiliar para percorrer a lista 
+    LISTA* no;    // ponteiro auxiliar para a codigo de referencia
+
+    printf("\n codigo de referencia: ");
+    fflush( stdin );                        // limpa buffer do teclado e faz a entrada de dados
+    scanf( "%d", &cod );              
+    
+    if(*l != NULL)
+	{                       // verifica se a lista esta vazia 
+        no = procura_nodo(*l, cod);       // procura codigo de referencia, a ser excluida
+        if((cod == no->info.codigo) && (no != NULL)){ // verifica se encontrou a codigo na lista
+            p = *l;                         // ponteiro auxiliar aponta para o inicio da lista
+            if(p == no)                   // verifica se o registro apontado pelo auxiliar e o registro que sera excluido
+                *l = p->prox;               // faz o inicio da lista apontar para o proximo registro, visto que o primeiro sera excluido
+            else{
+                while(p->prox != no)     // procura registro anterior ao que sera excluido
+                    p = p->prox;
+                p->prox = no->prox;        // faz o registro anterior apontar para um registro após o excluido - para onde este esta apontando
+            }
+
+            free(no); // libera o espaco de memoria que estava sendo ocupado pelo registro que foi excluido
+            printf("\n Registro excluido!");
+        }else
+             printf("\n Nodo nao encontrado!");
+    }else
+        printf("\n Lista vazia!");
 }
