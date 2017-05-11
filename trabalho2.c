@@ -1,26 +1,24 @@
-
-/*************************************************/ 
-/*         Desafio de Programação 2              */
-/* objetivo: Listas Encadeadas                   */
-/* programador: Rene Danni                       */
-/* programador: Marcus Medeiros                  */
-/* programador: Filipe Cemim                     */
-/* programador: Jonatan Colussi                  */
-/* programador: Felipe Santos da Silva           */
-/* criado em: 09/05/2017                         */
-/* data da ultima alteração: 11/05/2017          */
-/*************************************************/ 
+/***********************************************/ 
+/*                                             */
+/* objetivo: trabalho Daniela                  */
+/* programador: Rene Danni                     */
+/* programador: Marcus Medeiros                */
+/* programador: Filipe Cemin                   */
+/* programador: Jonatan Colussi                */
+/* programador: Felipe Santos da Silva         */
+/* criado em: 09/05/2017                       */
+/* data da ultima alteracao: 11/05/2017        */
+/***********************************************/ 
 
 #include <stdio.h>
 //#include <iostream>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <locale.h>
-#include <ctype.h>
+
 
 /***********************************************/ 
-/* Definição dos Registros                     */
+/* DefiniÃ§Ã£o dos Registros                     */
 /***********************************************/ 
 typedef struct{
     int  codigo;
@@ -36,34 +34,32 @@ typedef struct LISTA {
 } LISTA; 
 
 
-/**********************************************/ 
-/* Definição das Funções                      */
-/**********************************************/ 
+/***********************************************/ 
+/* DefiniÃ§Ã£oo das FunÃ§Ãµes                       */
+/***********************************************/ 
 void entrada_dados(LISTA* aux); // leitura dos dados de entrada
-void imprime_lista(LISTA* aux); // visualização da lista em tela
+void imprime_lista(LISTA* aux); // visualizacao da lista em tela
 void criar_lista(LISTA** p); // inicializa lista com NULL
 void ordena_lista(LISTA** p); // ordena lista por campo a ser escolhido
 void inserir_registro(LISTA** p); // inclui um novo registro no inicio da lista
-LISTA* procura_nodo( LISTA* p, int cod ); // procura na lista por código
-void remover_registro(LISTA** l); // exclui um regitro por código 
-int validarZona(char zona[1]); // valida se a zona é válida
+LISTA*  procura_nodo( LISTA* p, int cod ); // procura na lista por uma codigo
+void remover_registro(LISTA** p); // exclui um regitro por codigo 
 
 
 /***********************************************/ 
 /* Programa Principal                          */
 /***********************************************/ 
-main(){
+int main ( void ){
     char op;                            
     LISTA* p;
-    criar_lista(&p);
-    setlocale (LC_ALL, "Portuguese");
+    
     while(1){
          printf( "\n /---------------------------------------------------/" ); 
          printf( "\n Programa de cadastro de entidades                    " );
-         printf( "\n [1] Criar lista                                      " );
+         printf( "\n [1] Cria lista                                       " );
          printf( "\n [2] Inserir registro                                 " );
          printf( "\n [3] Remover registro                                 " );
-         printf( "\n [4] Imprimir lista                                   " );
+         printf( "\n [4] Imprime lista                                    " );
          printf( "\n [5] Odenar lista                                     " );
          printf( "\n [0] Para sair do programa                            " );
          printf( "\n /---------------------------------------------------/" );      
@@ -80,7 +76,7 @@ main(){
                 break;
            
            case '3':
-                remover_registro(&p);
+                //remover_registro(&p);
                 break;
                                                                             
            case '4':               
@@ -96,12 +92,14 @@ main(){
                 break;
                 
            default : 
-                printf( "\n Digite uma opção!" );
+                printf( "\n Digite uma opcao!" );
                 break;
         }
-        
+
+       
         fflush(stdin);
         getchar();
+        
         printf( "\n" );
     }
 }
@@ -109,12 +107,11 @@ main(){
 /************************************************ 
  * entrada_dados                                *
  * objetivo: rotina para ler dados              *
- * entrada : nodo (ponteiro para o novo espaço) *
- * saida   : nenhuma                            *
+ * entrada : nodo (ponteiro para o novo espaco) *
+ * saida   : nodo com dados                     *
  ************************************************/
 void entrada_dados(LISTA* aux){
-	int error = 0;
-	printf("\n\n Digite o código: "); 
+	printf("\n\n Digite o cÃ³digo: "); 
     fflush( stdin );// limpa buffer do teclado
     scanf("%d", &aux->info.codigo);
 
@@ -122,7 +119,7 @@ void entrada_dados(LISTA* aux){
     fflush(stdin);// limpa buffer do teclado
     gets(aux->info.nome);
     
-    printf("\n Digite o endereço da entidade: ");
+    printf("\n Digite o endereÃ§o da entidade: ");
     fflush(stdin);// limpa buffer do teclado
     gets(aux->info.endereco);
     
@@ -130,45 +127,33 @@ void entrada_dados(LISTA* aux){
     fflush(stdin);// limpa buffer do teclado
     gets(aux->info.telefone);
     
-    printf("\n Informe a zona [N, S, L, O]: ");
-    do{//obriga o usuário a escolher uma das zonas
+    printf("\n Informa a zona [N, S, L, O]: ");
+    //do{
 	    fflush(stdin);// limpa buffer do teclado
 	    gets(aux->info.zona);
-	    //Converte a entrada em letra maiuscula
-	    aux->info.zona[0] = toupper(aux->info.zona[0]);
-	    //verifica se a zona digitada está certa
-	    error = validarZona(aux->info.zona);
-	    //Caso esteja errado, repete o processo
-		if(error){
-	    	printf("\n\t ZONA INVÁLIDA!");
-   			printf("\n Informe a zona [N, S, L, O]: ");
-			fflush(stdin);// limpa buffer do teclado
-	    	gets(aux->info.zona);
-	    	//Converte a entrada em letra maiuscula
-		    aux->info.zona[0] = toupper(aux->info.zona[0]);
-		    //verifica se a zona digitada está certa
-		    error = validarZona(aux->info.zona);
-		}
-	}while(error);//repete até enquanto houverem erros
-    
-	aux->prox= NULL;
+	    
+	/*    if(aux->info.zona[0] != 'N' || aux->info.zona[0] != 'S' || aux->info.zona[0] != 'L' || aux->info.zona[0] != 'O')
+	    	printf("\n\t ZONA INVÃLIDA!");
+	}while(aux->info.zona[0] != 'N' || aux->info.zona[0] != 'S' || aux->info.zona[0] != 'L' || aux->info.zona[0] != 'O');
+  */
+    aux->prox= NULL;     // nÃ£o aponta
 }
 
 /************************************************
  * cria_lista                                   *
  * objetivo: rotina para inicializar a lista    *
  * entrada : lista                              *
- * saída   : NULL (inicializa lista)            *
+ * saÃ­da   : NULL (inicializa lista)            *
  ************************************************/ 
 void criar_lista(LISTA** p){
-	*p = NULL; //aponta a lista para NULL
+	*p = NULL;
 }
 
 /*************************************************** 
- * inserir_registro                                *
+ * inserir_registro                                   *
  * objetivo: rotina para inserir no inicio da lista*
  * entrada : referencia de lista                   *
- * saída   : referencia lista com novo registro    *
+ * saÃ­da   : referencia lista com novo registro    *
  ***************************************************/ 
 void inserir_registro(LISTA** p){
 	LISTA *no = (LISTA *) malloc(sizeof(LISTA));
@@ -186,42 +171,53 @@ void inserir_registro(LISTA** p){
 		printf("\n Lista Cheia \n");
 }
 
+/************************************************ 
+ * procura_nodo                                 *
+ * objetivo: achar um registro por codigo       *
+ * entrada : lista e codigo a ser procurado     *
+ * saÃ­da   : posicao ou NULL (nÃ£o encontrou)    *
+ ************************************************/ 
+LISTA* procura_nodo( LISTA* p, int cod )
+{ 
+    LISTA *no = ( LISTA *) malloc (sizeof (LISTA));
+
+    if (p == NULL)
+        printf("\n Lista vazia!"); 
+        else
+        {
+
+            while(p->info.codigo != cod)
+                p = p->prox;
+            
+            return p;
+        }
+    
+}
+
 /*************************************************
  * imprime_lista                                 *
  * objetivo: rotina para imprimir dados          *
  * entrada : lista                               *
  * saida   : nenhuma                             *
  *************************************************/ 
-void imprime_lista( LISTA* aux ){
-	if( aux == NULL )
-	    printf("\n Lista vazia");
-	else{
-	    LISTA *p = aux; //iniciliza o ponteiro auxiliar p
-	    while( p != NULL ){ //p percorre a lista até o fim
-     	    printf("\n Nome: %s", p->info.nome);
-     	    printf("\n Codigo: %i", p->info.codigo);
-            printf("\n Endereço: %s", p->info.endereco);
-            printf("\n Telefone: %s", p->info.telefone);
-            printf("\n Zona ");
-            switch(p->info.zona[0]){
-            	case 'N':
-            		printf("Norte");
-            		break;
-            	case 'S':
-            		printf("Sul");
-            		break;
-            	case 'L':
-            		printf("Leste");
-            		break;
-            	case 'O':
-            		printf("Oeste");
-            		break;
-			}
-			printf("\n---------------------\n");
-	     	p= p->prox; //anda pela lista
-		}    
+void imprime_lista( LISTA* aux )
+{
+	 if( aux == NULL )
+	     printf("\n Lista vazia");
+	 else{
+	     LISTA *p = aux; //iniciliza o ponteiro auxiliar p
+	     while( p != NULL ){ //p percorre a lista atÃ© o fim
+	     	    printf("\n Nome: %s", p->info.nome);
+	     	    printf("\n Codigo: %i", p->info.codigo);
+                printf("\n EndereÃ§o: %s", p->info.endereco);
+                printf("\n Telefone: %s", p->info.telefone);
+                printf("\n Zona: %s", p->info.zona);
+
+	     	    p= p->prox; //anda pela lista
+		 }    
 	          
-	}
+	 }
+
 }
 
 /*************************************************** 
@@ -230,26 +226,26 @@ void imprime_lista( LISTA* aux ){
  * entrada : lista                                 *
  * saida   : lista ordenada por codigo             *
  ***************************************************/ 
-void ordena_lista( LISTA** l )                // Função para ordenar lista
+void ordena_lista( LISTA** l )
 {
-    if(*l == NULL)                            //Testa se a lista está vazia
+    if(*l == NULL)
         printf("\n Lista vazia!");
     else{
-        if( (*l)->prox == NULL)              //Testa se a lista tem mais de um registro
+        if( (*l)->prox == NULL)
             printf("\n Lista com apenas 1 elemento!");
         else{
             ENTIDADE aux;
-            LISTA *ant = *l;                 // cria ponteiro auxiliar para lista 
-            LISTA *p = ant->prox;            // cria ponteiro auxiliar para o próximo
-
-        char ord; 							// cria variável de seleção do menu
+            LISTA *ant = *l;
+            LISTA *p = ant->prox;
+        
+        char ord;
 
          printf( "\n /---------------------------------------------------/" ); 
          printf( "\n Selecione o Campo de OredenaÃ§Ã£o                      " );
-         printf( "\n [1] Código                                           " );
+         printf( "\n [1] CÃ³digo                                           " );
          printf( "\n [2] Nome                                             " );
          printf( "\n [3] Telefone                                         " );
-         printf( "\n [4] Endereço                                         " );
+         printf( "\n [4] EndereÃ§o                                         " );
          printf( "\n [5] Zona                                             " );
          printf( "\n [0] Cancelar                                         " );
          printf( "\n /---------------------------------------------------/" );      
@@ -257,12 +253,15 @@ void ordena_lista( LISTA** l )                // Função para ordenar lista
          fflush(stdin);
          ord = getchar();
 
-         switch( ord ) { 								// Escolhe o campo a ser ordenado
+         clock_t start = clock();
+         clock_t diff;
+
+         switch( ord ) { // Escolhe o campo a ser ordenado
            case '1':
             
-            while( ant->prox != NULL) { 	 			//percorre a lista até que o proximo seja nulo
+            while( ant->prox != NULL) {
                 while (p != NULL){
-                    if(p->info.codigo < ant->info.codigo) // testa se o código de p é menor de ant 
+                    if(p->info.codigo < ant->info.codigo)
                     {
                         aux = p->info;
                         p->info = ant->info;
@@ -278,7 +277,7 @@ void ordena_lista( LISTA** l )                // Função para ordenar lista
                                 
            case '2':
            
-             while( ant->prox != NULL) {   //percorre a lista até que o proximo seja nulo
+             while( ant->prox != NULL) {
                 while (p != NULL){
                     if(strcmp(p->info.nome,ant->info.nome) < 0) // Compara strings -1 menor, 0 igual, 1 maior
                     {
@@ -296,9 +295,9 @@ void ordena_lista( LISTA** l )                // Função para ordenar lista
            
            case '3':
                 
-            while( ant->prox != NULL) {    		//percorre a lista até que o proximo seja nulo
-                while (p != NULL){ 
-                    if(p->info.telefone < ant->info.telefone)  // testa se p é menor que ant
+            while( ant->prox != NULL) {
+                while (p != NULL){
+                    if(p->info.telefone < ant->info.telefone)
                     {
                         aux = p->info;
                         p->info = ant->info;
@@ -314,9 +313,9 @@ void ordena_lista( LISTA** l )                // Função para ordenar lista
                                                                             
            case '4':               
                 
-            while( ant->prox != NULL) { 		 //percorre a lista até que o proximo seja nulo
+            while( ant->prox != NULL) {
                 while (p != NULL){
-                    if(strcmp(p->info.endereco, ant->info.endereco) < 0)  // compara string
+                    if(strcmp(p->info.endereco, ant->info.endereco) < 0)
                     {
                         aux = p->info;
                         p->info = ant->info;
@@ -332,9 +331,9 @@ void ordena_lista( LISTA** l )                // Função para ordenar lista
                 
             case '5':
                 
-            while( ant->prox != NULL) {  //percorre a lista até que o proximo seja nulo
+            while( ant->prox != NULL) {
                 while (p != NULL){
-                    if(strcmp(p->info.zona, ant->info.zona) < 0 ) //compara string
+                    if(strcmp(p->info.zona, ant->info.zona) < 0 )
                     {
                         aux = p->info;
                         p->info = ant->info;
@@ -348,89 +347,27 @@ void ordena_lista( LISTA** l )                // Função para ordenar lista
 
                 break;
                                 
-           case '0':     // opção de saída                                      
+           case '0':                                           
                 break;
                 
            default : 
-                printf( "\n Opção inválida!" );
+                printf( "\n OpÃ§Ã£o invÃ¡lida!" );
                 break;
         }
 
+        diff = clock() - start;
+
+        int msec = diff * 1000 / CLOCKS_PER_SEC;
+        printf("Tempo de processamento foi %d segundos %d milisegundos", msec/1000, msec%1000);
 
     }
 
-}
-
-}
-
-/************************************************ 
- * procura_nodo                                 *
- * objetivo: achar um registro por codigo       *
- * entrada : lista e codigo a ser procurado     *
- * saÃ­da   : posicao ou NULL (nÃ£o encontrou)    *
- ************************************************/ 
-
-LISTA* procura_nodo( LISTA *p, int cod ){
-	while(p->info.codigo != cod){ // repete ate encontrar o cod desejado
-		p=p->prox;	// percorre lista
-		if(p==NULL) // toda lista percorrida e nao encontrou
-			return NULL;
-	}
-	return p; 		// encontrou, retorna o endereco do cod desejado
-}
-
-/**************************************************** 
- * remover_registro                                 *
- * objetivo: rotina para excluir registro da lista  *
- * entrada : lista                                  *
- * saida   : nenhum                                 *
- ***************************************************/ 
-
-void remover_registro(LISTA** l){
-	int cod;      // codigo para excluir 
-    LISTA* p;     // ponteiro auxiliar para percorrer a lista 
-    LISTA* no;    // ponteiro auxiliar para a codigo de referencia
-
-    printf("\n codigo de referencia: ");
-    fflush( stdin );                        // limpa buffer
-    scanf( "%d", &cod );              	// entrada de dados
     
-    if(*l != NULL){                       // verifica se a lista esta vazia 
-        no = procura_nodo(*l, cod);       // procura codigo de referencia, para excluir
-        if((cod == no->info.codigo) && (no != NULL)){ // verifica se encontrou a codigo na lista
-            p = *l;                         // ponteiro auxiliar aponta para o inicio da lista
-            if(p == no)                   // verifica se o registro apontado pelo auxiliar e o registro que sera excluido são iguais
-                *l = p->prox;               // faz o inicio da lista apontar para o proximo registro, visto que o primeiro sera excluido
-            else{
-                while(p->prox != no)     // procura registro anterior ao que sera excluido
-                    p = p->prox;
-                p->prox = no->prox;        // faz o registro anterior apontar para um registro após o excluido 
-            }
 
-            free(no); // libera o espaco de memoria que estava sendo ocupado pelo registro que foi removido
-            printf("\n Registro removido!");
-        }else
-             printf("\n Registro não encontrado!");
-    }else
-        printf("\n Lista está vazia!");
 }
 
-/***************************************************************** 
- * validarZona                                                   *
- * objetivo: função para validar se a zona digitada está correta *
- * entrada : char[1]                                             *
- * saida   : int                                                 *
- *****************************************************************/ 
-int validarZona(char zona[1]){
-	switch(zona[0]){
-    	case 'N':
-    	case 'S':
-    	case 'L':
-    	case 'O':
-    		//se a zona digitada está ná lista, retorna 0, ou seja false. Esse retorno será usado como erro
-    		return 0;
-    	default:
-    		//se a zona digitada não está ná lista, retorna 1, ou seja true. Esse retorno será usado como erro
-    		return 1;
-	}
+
+
 }
+
+
