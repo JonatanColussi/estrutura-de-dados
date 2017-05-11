@@ -1,3 +1,4 @@
+
 /***********************************************/ 
 /*                                             */
 /* objetivo: trabalho Daniela                  */
@@ -44,7 +45,7 @@ void imprime_lista(LISTA* aux); // visualização da lista em tela
 void criar_lista(LISTA** p); // inicializa lista com NULL
 void ordena_lista(LISTA** p); // ordena lista por campo a ser escolhido
 void inserir_registro(LISTA** p); // inclui um novo registro no inicio da lista
-LISTA* procura_nodo( LISTA* p, int cod ); // procura na lista por uma código
+LISTA* procura_nodo( LISTA* p, int cod ); // procura na lista por código
 void remover_registro(LISTA** p); // exclui um regitro por código 
 
 
@@ -79,7 +80,7 @@ main(){
                 break;
            
            case '3':
-                //remover_registro(&p);
+                remover_registro(&p);
                 break;
                                                                             
            case '4':               
@@ -370,4 +371,47 @@ void ordena_lista( LISTA** l )
 }
 }
 
+LISTA* procura_nodo( LISTA *p, int cod ){
+	while(p->info.codigo != cod){ // repete ate encontrar o cod desejado
+		p=p->prox;	// percorre lista
+		if(p==NULL) // toda lista percorrida e nao encontrou
+			return NULL;
+	}
+	return p; 		// encontrou, retorna o endereco do cod desejado
+}
 
+
+
+void remover_registro(LISTA** p){
+	if(*l != NULL){
+		int cod = 0;
+		LISTA *p = *l;
+		LISTA *pc = p;
+		printf("\n\n  Digite o codigo do registro para exclusao: ");
+		fflush(stdin);
+		scanf("%d",&cod);
+		p = procura_nodo(p, cod);
+		
+		if(p != NULL){
+			if(pc==p){
+				*l=p->prox;
+				pc->prox=p->prox;
+				free(p);
+				printf("funcionou");
+			}else{
+				while(pc->prox!=p){
+					pc=pc->prox;
+					pc->prox=p->prox;
+					free(p);
+					p=NULL;
+				printf("Aqui tambem ");
+				}
+			}
+		}else{
+			printf(" Codigo não encontado");
+		}	
+		
+	}else{
+		printf(" Lista Vazia");
+	}
+}

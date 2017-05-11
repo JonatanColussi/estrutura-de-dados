@@ -277,10 +277,10 @@ void conta_nodo( LISTA** l ){
  * entrada : lista e codigo a ser procurado     *
  * saída   : posicao ou NULL (não encontrou)    *
  ************************************************/ 
-LISTA* procura_nodo( LISTA* p, int cod )
+LISTA* procura_nodo( LISTA* l, int cod )
 { 
-    while( ( p->info.codigo != cod ) && ( p->prox != NULL ))// anda pela lista até o final ou até encontrar codigo desejado
-             p = p->prox;                                   // passa para o proximo   
+    while( ( l->info.codigo != cod ) && ( l->prox != NULL ))// anda pela lista até o final ou até encontrar codigo desejado
+             l = l->prox;                                   // passa para o proximo   
              
     return p; // nodo de referencia
 }
