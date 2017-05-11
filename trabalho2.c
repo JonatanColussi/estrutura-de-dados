@@ -1,15 +1,15 @@
 
-/***********************************************/ 
-/*                                             */
-/* objetivo: trabalho Daniela                  */
-/* programador: Rene Danni                     */
-/* programador: Marcus Medeiros                */
-/* programador: Filipe Cemin                   */
-/* programador: Jonatan Colussi                */
-/* programador: Felipe Santos da Silva         */
-/* criado em: 09/05/2017                       */
-/* data da ultima alteração: 11/05/2017        */
-/***********************************************/ 
+/*************************************************/ 
+/*         Desafio de Programação 2              */
+/* objetivo: Listas Encadeadas                   */
+/* programador: Rene Danni                       */
+/* programador: Marcus Medeiros                  */
+/* programador: Filipe Cemim                     */
+/* programador: Jonatan Colussi                  */
+/* programador: Felipe Santos da Silva           */
+/* criado em: 09/05/2017                         */
+/* data da ultima alteração: 11/05/2017          */
+/*************************************************/ 
 
 #include <stdio.h>
 //#include <iostream>
@@ -18,7 +18,6 @@
 #include <time.h>
 #include <locale.h>
 #include <ctype.h>
-
 
 /***********************************************/ 
 /* Definição dos Registros                     */
@@ -37,9 +36,9 @@ typedef struct LISTA {
 } LISTA; 
 
 
-/***********************************************/ 
-/* Definiçãoo das Funções                      */
-/***********************************************/ 
+/**********************************************/ 
+/* Definição das Funções                      */
+/**********************************************/ 
 void entrada_dados(LISTA* aux); // leitura dos dados de entrada
 void imprime_lista(LISTA* aux); // visualização da lista em tela
 void criar_lista(LISTA** p); // inicializa lista com NULL
@@ -60,10 +59,10 @@ main(){
     while(1){
          printf( "\n /---------------------------------------------------/" ); 
          printf( "\n Programa de cadastro de entidades                    " );
-         printf( "\n [1] Criar lista                                       " );
+         printf( "\n [1] Criar lista                                      " );
          printf( "\n [2] Inserir registro                                 " );
          printf( "\n [3] Remover registro                                 " );
-         printf( "\n [4] Imprimir lista                                    " );
+         printf( "\n [4] Imprimir lista                                   " );
          printf( "\n [5] Odenar lista                                     " );
          printf( "\n [0] Para sair do programa                            " );
          printf( "\n /---------------------------------------------------/" );      
@@ -154,17 +153,17 @@ void entrada_dados(LISTA* aux){
  * cria_lista                                   *
  * objetivo: rotina para inicializar a lista    *
  * entrada : lista                              *
- * saÃ­da   : NULL (inicializa lista)            *
+ * saída   : NULL (inicializa lista)            *
  ************************************************/ 
 void criar_lista(LISTA** p){
 	*p = NULL;
 }
 
 /*************************************************** 
- * inserir_registro                                   *
+ * inserir_registro                                *
  * objetivo: rotina para inserir no inicio da lista*
  * entrada : referencia de lista                   *
- * saÃ­da   : referencia lista com novo registro    *
+ * saída   : referencia lista com novo registro    *
  ***************************************************/ 
 void inserir_registro(LISTA** p){
 	LISTA *no = (LISTA *) malloc(sizeof(LISTA));
@@ -186,7 +185,7 @@ void inserir_registro(LISTA** p){
  * procura_nodo                                 *
  * objetivo: achar um registro por codigo       *
  * entrada : lista e codigo a ser procurado     *
- * saÃ­da   : posicao ou NULL (nÃ£o encontrou)    *
+ * saída   : posicao ou NULL (não encontrou)    *
  ************************************************/ 
 
 
@@ -239,19 +238,19 @@ void imprime_lista( LISTA* aux )
  * entrada : lista                                 *
  * saida   : lista ordenada por codigo             *
  ***************************************************/ 
-void ordena_lista( LISTA** l )
+void ordena_lista( LISTA** l )                // Função para ordenar lista
 {
-    if(*l == NULL)
+    if(*l == NULL)                            //Testa se a lista está vazia
         printf("\n Lista vazia!");
     else{
-        if( (*l)->prox == NULL)
+        if( (*l)->prox == NULL)              //Testa se a lista tem mais de um registro
             printf("\n Lista com apenas 1 elemento!");
         else{
             ENTIDADE aux;
-            LISTA *ant = *l;
-            LISTA *p = ant->prox;
+            LISTA *ant = *l;                 // cria ponteiro auxiliar para lista 
+            LISTA *p = ant->prox;            // cria ponteiro auxiliar para o próximo
         
-        char ord;
+        char ord; 							// cria variável de seleção do menu
 
          printf( "\n /---------------------------------------------------/" ); 
          printf( "\n Selecione o Campo de OredenaÃ§Ã£o                      " );
@@ -266,12 +265,12 @@ void ordena_lista( LISTA** l )
          fflush(stdin);
          ord = getchar();
 
-         switch( ord ) { // Escolhe o campo a ser ordenado
+         switch( ord ) { 								// Escolhe o campo a ser ordenado
            case '1':
             
-            while( ant->prox != NULL) {
+            while( ant->prox != NULL) { 	 			//percorre a lista até que o proximo seja nulo
                 while (p != NULL){
-                    if(p->info.codigo < ant->info.codigo)
+                    if(p->info.codigo < ant->info.codigo) // testa se o código de p é menor de ant 
                     {
                         aux = p->info;
                         p->info = ant->info;
@@ -287,7 +286,7 @@ void ordena_lista( LISTA** l )
                                 
            case '2':
            
-             while( ant->prox != NULL) {
+             while( ant->prox != NULL) {   //percorre a lista até que o proximo seja nulo
                 while (p != NULL){
                     if(strcmp(p->info.nome,ant->info.nome) < 0) // Compara strings -1 menor, 0 igual, 1 maior
                     {
@@ -305,9 +304,9 @@ void ordena_lista( LISTA** l )
            
            case '3':
                 
-            while( ant->prox != NULL) {
-                while (p != NULL){
-                    if(p->info.telefone < ant->info.telefone)
+            while( ant->prox != NULL) {    		//percorre a lista até que o proximo seja nulo
+                while (p != NULL){ 
+                    if(p->info.telefone < ant->info.telefone)  // testa se p é menor que ant
                     {
                         aux = p->info;
                         p->info = ant->info;
@@ -323,9 +322,9 @@ void ordena_lista( LISTA** l )
                                                                             
            case '4':               
                 
-            while( ant->prox != NULL) {
+            while( ant->prox != NULL) { 		 //percorre a lista até que o proximo seja nulo
                 while (p != NULL){
-                    if(strcmp(p->info.endereco, ant->info.endereco) < 0)
+                    if(strcmp(p->info.endereco, ant->info.endereco) < 0)  // compara string
                     {
                         aux = p->info;
                         p->info = ant->info;
@@ -341,9 +340,9 @@ void ordena_lista( LISTA** l )
                 
             case '5':
                 
-            while( ant->prox != NULL) {
+            while( ant->prox != NULL) {  //percorre a lista até que o proximo seja nulo
                 while (p != NULL){
-                    if(strcmp(p->info.zona, ant->info.zona) < 0 )
+                    if(strcmp(p->info.zona, ant->info.zona) < 0 ) //compara string
                     {
                         aux = p->info;
                         p->info = ant->info;
@@ -357,7 +356,7 @@ void ordena_lista( LISTA** l )
 
                 break;
                                 
-           case '0':                                           
+           case '0':     // opção de saída                                      
                 break;
                 
            default : 
