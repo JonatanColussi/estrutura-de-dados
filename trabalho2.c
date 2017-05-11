@@ -47,6 +47,7 @@ void ordena_lista(LISTA** p); // ordena lista por campo a ser escolhido
 void inserir_registro(LISTA** p); // inclui um novo registro no inicio da lista
 LISTA* procura_nodo( LISTA* p, int cod ); // procura na lista por código
 void remover_registro(LISTA** l); // exclui um regitro por código 
+int validarZona(char zona[1]); // valida se a zona é válida
 
 
 /***********************************************/ 
@@ -115,6 +116,7 @@ main(){
  * saida   : nodo com dados                     *
  ************************************************/
 void entrada_dados(LISTA* aux){
+	int error = 0;
 	printf("\n\n Digite o código: "); 
     fflush( stdin );// limpa buffer do teclado
     scanf("%d", &aux->info.codigo);
@@ -131,21 +133,21 @@ void entrada_dados(LISTA* aux){
     fflush(stdin);// limpa buffer do teclado
     gets(aux->info.telefone);
     
-    printf("\n Informe a zona [N, S, L, O, C]: ");
+    printf("\n Informe a zona [N, S, L, O]: ");
     do{
 	    fflush(stdin);// limpa buffer do teclado
 	    gets(aux->info.zona);
 	    aux->info.zona[0] = toupper(aux->info.zona[0]);
-	    
-		if(aux->info.zona[0] != 'N' || aux->info.zona[0] != 'S' || aux->info.zona[0] != 'L' || aux->info.zona[0] != 'O' || aux->info.zona[0] != 'C'){
+	    error = validarZona(aux->info.zona);
+		if(error){
 	    	printf("\n\t ZONA INVÁLIDA!");
-   			printf("\n Informe a zona [N, S, L, O, C]: ");
+   			printf("\n Informe a zona [N, S, L, O]: ");
 			fflush(stdin);// limpa buffer do teclado
 	    	gets(aux->info.zona);
 	    	aux->info.zona[0] = toupper(aux->info.zona[0]);
+			error = validarZona(aux->info.zona);
 		}
-		
-	}while(aux->info.zona[0] != 'N' && aux->info.zona[0] != 'S' && aux->info.zona[0] != 'L' && aux->info.zona[0] != 'O' && aux->info.zona[0] != 'C');
+	}while(error);
     
 	aux->prox= NULL;
 }
@@ -220,9 +222,6 @@ void imprime_lista( LISTA* aux )
                 		break;
                 	case 'O':
                 		printf("Oeste");
-                		break;
-                	case 'C':
-                		printf("Central");
                 		break;
 				}
 				printf("\n---------------------\n");
@@ -410,4 +409,16 @@ void remover_registro(LISTA** l){
              printf("\n Nodo nao encontrado!");
     }else
         printf("\n Lista vazia!");
+}
+
+int validarZona(char zona[1]){
+	switch(zona[0]){
+    	case 'N':
+    	case 'S':
+    	case 'L':
+    	case 'O':
+    		return 0;
+    	default:
+    		return 1;
+	}
 }
