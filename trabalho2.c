@@ -1,6 +1,6 @@
 
 /*************************************************/ 
-/*         Desafio de Programação 3              */
+/*         Desafio de Programação 2              */
 /* objetivo: Listas Encadeadas                   */
 /* programador: Rene Danni                       */
 /* programador: Marcus Medeiros                  */
@@ -116,7 +116,7 @@ main(){
  * entrada_dados                                *
  * objetivo: rotina para ler dados              *
  * entrada : nodo (ponteiro para o novo espaço) *
- * saída   : nenhuma                            *
+ * saida   : nenhuma                            *
  ************************************************/
 void entrada_dados(LISTA* aux, int inserirCodigo){
 	int error = 0;
@@ -198,7 +198,7 @@ void inserir_registro(LISTA** p){
  * imprime_lista                                 *
  * objetivo: rotina para imprimir dados          *
  * entrada : lista                               *
- * saída   : nenhuma                             *
+ * saida   : nenhuma                             *
  *************************************************/ 
 void imprime_lista( LISTA* aux ){
 	if( aux == NULL )
@@ -236,237 +236,156 @@ void imprime_lista( LISTA* aux ){
  * ordena_lista                                    *
  * objetivo: rotina para ordenar a lista           *
  * entrada : lista                                 *
- * saída   : lista ordenada por codigo             *
+ * saida   : lista ordenada por codigo             *
  ***************************************************/ 
-void ordena_lista( LISTA** l ){// Função para ordenar lista
+void ordena_lista( LISTA** l )                // Função para ordenar lista
+{
 	time_t tempoInicial, tempoFinal; //cria as variaveis para pegar o tempo inicial e o tempo final
-  float tempoGasto; // cria a variavel que vai receber o tempo total gasto em execução
+    float tempoGasto; // cria a variavel que vai receber o tempo total gasto em execução
          
 	tempoInicial = time(NULL); // captura o tempo que iniciou a função
-  if(*l == NULL)                            //Testa se a lista está vazia
-    printf("\n Lista vazia!");
-  else{
-    if( (*l)->prox == NULL)              //Testa se a lista tem mais de um registro
-      printf("\n Lista com apenas 1 elemento!");
+    if(*l == NULL)                            //Testa se a lista está vazia
+        printf("\n Lista vazia!");
     else{
-      LISTA *p = *l; //Ponteiro auxiliar
-      LISTA *b = *l; //Ponteiro auxiliar
-      LISTA *menor = *l; //Ponteiro auxiliar
-      //todos acima apontam para o início da lista
+        if( (*l)->prox == NULL)              //Testa se a lista tem mais de um registro
+            printf("\n Lista com apenas 1 elemento!");
+        else{
+            ENTIDADE aux;
+            LISTA *ant = *l;                 // cria ponteiro auxiliar para lista 
+            LISTA *p = ant->prox;            // cria ponteiro auxiliar para o próximo
 
-     	LISTA *a = p->prox; //Ponteiro auxiliar que aponta pro proximo em relação ao primeiro
-      char ord;// cria variável de seleção do menu
+        char ord; 							// cria variável de seleção do menu
 
-      printf( "\n /---------------------------------------------------/" ); 
-      printf( "\n Selecione o Campo de Oredenação                      " );
-      printf( "\n [1] Código                                           " );
-      printf( "\n [2] Nome                                             " );
-      printf( "\n [3] Telefone                                         " );
-      printf( "\n [4] Endereço                                         " );
-      printf( "\n [5] Zona                                             " );
-      printf( "\n [0] Cancelar                                         " );
-      printf( "\n /---------------------------------------------------/" );      
-      printf( "\n Opcao: " );
-      fflush(stdin);
-      ord = getchar();
+         printf( "\n /---------------------------------------------------/" ); 
+         printf( "\n Selecione o Campo de OredenaÃ§Ã£o                      " );
+         printf( "\n [1] Código                                           " );
+         printf( "\n [2] Nome                                             " );
+         printf( "\n [3] Telefone                                         " );
+         printf( "\n [4] Endereço                                         " );
+         printf( "\n [5] Zona                                             " );
+         printf( "\n [0] Cancelar                                         " );
+         printf( "\n /---------------------------------------------------/" );      
+         printf( "\n Opcao: " );
+         fflush(stdin);
+         ord = getchar();
+		 
+		
+         switch( ord ) { 								// Escolhe o campo a ser ordenado
+           case '1':
+            
+            while( ant->prox != NULL) { 	 			//percorre a lista até que o proximo seja nulo
+                while (p != NULL){
+                    if(p->info.codigo < ant->info.codigo) // testa se o código de p é menor de ant 
+                    {
+                        aux = p->info;
+                        p->info = ant->info;
+                        ant->info = aux;
+                    }
+                    p = p->prox;
+                }
+                ant= ant->prox;
+                p = ant->prox;
+            }
+            
+                break;
+                                
+           case '2':
+           
+             while( ant->prox != NULL) {   //percorre a lista até que o proximo seja nulo
+                while (p != NULL){
+                    if(strcmp(p->info.nome,ant->info.nome) < 0) // Compara strings -1 menor, 0 igual, 1 maior
+                    {
+                        aux = p->info;
+                        p->info = ant->info;
+                        ant->info = aux;
+                    }
+                    p = p->prox;
+                }
+                ant= ant->prox;
+                p = ant->prox;
+            }
+           
+                break;
+           
+           case '3':
+                
+            while( ant->prox != NULL) {    		//percorre a lista até que o proximo seja nulo
+                while (p != NULL){ 
+                    if(p->info.telefone < ant->info.telefone)  // testa se p é menor que ant
+                    {
+                        aux = p->info;
+                        p->info = ant->info;
+                        ant->info = aux;
+                    }
+                    p = p->prox;
+                }
+                ant= ant->prox;
+                p = ant->prox;
+            }
 
-      switch(ord){// Escolhe o campo a ser ordenado
-        case '1':
-          while(p->prox != NULL){//percorre a lista até que o proximo seja nulo
-            while(a != NULL){//percorre a lista com o auxiliar 'a' até que o proximo seja nulo
-				      if(a->info.codigo < menor->info.codigo){ // verifica se o código da Posição 'a' é menor que o 'menor'
-                menor = a; // se o código da Posição 'a' for menor que o 'menor', entao o menor é 'a'
-				        while(b->prox != menor)//percorrre a lista procurando a posição anterior ao menor
-						      b = b->prox; // 'b' se posiciona na posição anterior ao menor
-		          }
-		          a = a->prox; // 'a' se posiciona uma posição após ele mesmo
-		        }
-		        if(p == *l){ // se 'p' estiver na primeira Posição, alteramos a primeira posição
-              if(menor == p){ // se o p for o menor
-                p = p->prox; // passamos o p para a próxima posição
-              }else{
-		            *l = menor; // 'l' aponta para o 'menor', ou seja, o primeiro vai ser o menor ;)
-                b->prox = menor->prox; // 'b' aponta para o mesmo lugar que o 'menor' estava appontando
-                menor->prox = p; // 'menor' agora aponta para 'p'
-				      }
-            }else{
-              if(menor == p){ // se o p for o menor
-                p=p->prox; // passamos o p para a próxima posição
-              }else{
-                a = *l; // posicionamos 'a' no inicio
-                while(a->prox != p) //percorrre a lista procurando a posição anterior ao p
-                  a = a->prox; // 'a' se posiciona na posição próxima a ele mesmo
-                a->prox = menor;  // prox de a aponta para o menor
-                b->prox = menor->prox; // prox de b aponta para o mesmo lugar que aponta o prox do menor
-                menor->prox = p; // prox de menor aponta para p
-				      }
+                break;
+                                                                            
+           case '4':               
+                
+            while( ant->prox != NULL) { 		 //percorre a lista até que o proximo seja nulo
+                while (p != NULL){
+                    if(strcmp(p->info.endereco, ant->info.endereco) < 0)  // compara string
+                    {
+                        aux = p->info;
+                        p->info = ant->info;
+                        ant->info = aux;
+                    }
+                    p = p->prox;
+                }
+                ant= ant->prox;
+                p = ant->prox;
             }
-            menor = p; 	//menor recebe p
-            b = p;		// a ordenação continua a partir de 'p'
-            a = p->prox; // 'a' aponta para o próximo de 'p', novamente...
-          }
-        break;                        
-        case '2':
-          while(p->prox != NULL){//percorre a lista até que o proximo seja nulo
-            while(a != NULL){//percorre a lista com o auxiliar 'a' até que o proximo seja nulo
-              if(strcmp(a->info.nome, menor->info.nome) < 0){ // Compara strings -1 menor, 0 igual, 1 maior
-                menor = a; // se o código da Posição 'a' for menor que o 'menor', entao o menor é 'a'
-                while(b->prox != menor)//percorrre a lista procurando a posição anterior ao menor
-                  b = b->prox; // 'b' se posiciona na posição anterior ao menor
-              }
-              a = a->prox; // 'a' se posiciona uma posição após ele mesmo
+
+                break;
+                
+            case '5':
+                
+            while( ant->prox != NULL) {  //percorre a lista até que o proximo seja nulo
+                while (p != NULL){
+                    if(strcmp(p->info.zona, ant->info.zona) < 0 ) //compara string
+                    {
+                        aux = p->info;
+                        p->info = ant->info;
+                        ant->info = aux;
+                    }
+                    p = p->prox;
+                }
+                ant= ant->prox;
+                p = ant->prox;
             }
-            if(p == *l){ // se 'p' estiver na primeira Posição, alteramos a primeira posição
-              if(menor == p){ // se o p for o menor
-                p = p->prox; // passamos o p para a próxima posição
-              }else{
-                *l = menor; // 'l' aponta para o 'menor', ou seja, o primeiro vai ser o menor ;)
-                b->prox = menor->prox; // 'b' aponta para o mesmo lugar que o 'menor' estava appontando
-                menor->prox = p; // 'menor' agora aponta para 'p'
-              }
-            }else{
-              if(menor == p){ // se o p for o menor
-                p=p->prox; // passamos o p para a próxima posição
-              }else{
-                a = *l; // posicionamos 'a' no inicio
-                while(a->prox != p) //percorrre a lista procurando a posição anterior ao p
-                  a = a->prox; // 'a' se posiciona na posição próxima a ele mesmo
-                a->prox = menor;  // prox de a aponta para o menor
-                b->prox = menor->prox; // prox de b aponta para o mesmo lugar que aponta o prox do menor
-                menor->prox = p; // prox de menor aponta para p
-              }
-            }
-            menor = p;  //menor recebe p
-            b = p;    // a ordenação continua a partir de 'p'
-            a = p->prox; // 'a' aponta para o próximo de 'p', novamente...
-          }
-        break;
-        case '3':   
-          while(p->prox != NULL){//percorre a lista até que o proximo seja nulo
-            while(a != NULL){//percorre a lista com o auxiliar 'a' até que o proximo seja nulo
-              if(strcmp(a->info.telefone, menor->info.telefone) < 0){ // Compara strings -1 menor, 0 igual, 1 maior
-                menor = a; // se o código da Posição 'a' for menor que o 'menor', entao o menor é 'a'
-                while(b->prox != menor)//percorrre a lista procurando a posição anterior ao menor
-                  b = b->prox; // 'b' se posiciona na posição anterior ao menor
-              }
-              a = a->prox; // 'a' se posiciona uma posição após ele mesmo
-            }
-            if(p == *l){ // se 'p' estiver na primeira Posição, alteramos a primeira posição
-              if(menor == p){ // se o p for o menor
-                p = p->prox; // passamos o p para a próxima posição
-              }else{
-                *l = menor; // 'l' aponta para o 'menor', ou seja, o primeiro vai ser o menor ;)
-                b->prox = menor->prox; // 'b' aponta para o mesmo lugar que o 'menor' estava appontando
-                menor->prox = p; // 'menor' agora aponta para 'p'
-              }
-            }else{
-              if(menor == p){ // se o p for o menor
-                p=p->prox; // passamos o p para a próxima posição
-              }else{
-                a = *l; // posicionamos 'a' no inicio
-                while(a->prox != p) //percorrre a lista procurando a posição anterior ao p
-                  a = a->prox; // 'a' se posiciona na posição próxima a ele mesmo
-                a->prox = menor;  // prox de a aponta para o menor
-                b->prox = menor->prox; // prox de b aponta para o mesmo lugar que aponta o prox do menor
-                menor->prox = p; // prox de menor aponta para p
-              }
-            }
-            menor = p;  //menor recebe p
-            b = p;    // a ordenação continua a partir de 'p'
-            a = p->prox; // 'a' aponta para o próximo de 'p', novamente...
-          }
-        break;                                                                    
-        case '4':                       
-          while(p->prox != NULL){//percorre a lista até que o proximo seja nulo
-            while(a != NULL){//percorre a lista com o auxiliar 'a' até que o proximo seja nulo
-              if(strcmp(a->info.endereco, menor->info.endereco) < 0){ // Compara strings -1 menor, 0 igual, 1 maior
-                menor = a; // se o código da Posição 'a' for menor que o 'menor', entao o menor é 'a'
-                while(b->prox != menor)//percorrre a lista procurando a posição anterior ao menor
-                  b = b->prox; // 'b' se posiciona na posição anterior ao menor
-              }
-              a = a->prox; // 'a' se posiciona uma posição após ele mesmo
-            }
-            if(p == *l){ // se 'p' estiver na primeira Posição, alteramos a primeira posição
-              if(menor == p){ // se o p for o menor
-                p = p->prox; // passamos o p para a próxima posição
-              }else{
-                *l = menor; // 'l' aponta para o 'menor', ou seja, o primeiro vai ser o menor ;)
-                b->prox = menor->prox; // 'b' aponta para o mesmo lugar que o 'menor' estava appontando
-                menor->prox = p; // 'menor' agora aponta para 'p'
-              }
-            }else{
-              if(menor == p){ // se o p for o menor
-                p=p->prox; // passamos o p para a próxima posição
-              }else{
-                a = *l; // posicionamos 'a' no inicio
-                while(a->prox != p) //percorrre a lista procurando a posição anterior ao p
-                  a = a->prox; // 'a' se posiciona na posição próxima a ele mesmo
-                a->prox = menor;  // prox de a aponta para o menor
-                b->prox = menor->prox; // prox de b aponta para o mesmo lugar que aponta o prox do menor
-                menor->prox = p; // prox de menor aponta para p
-              }
-            }
-            menor = p;  //menor recebe p
-            b = p;    // a ordenação continua a partir de 'p'
-            a = p->prox; // 'a' aponta para o próximo de 'p', novamente...
-          }
-        break;        
-        case '5':        
-          while(p->prox != NULL){//percorre a lista até que o proximo seja nulo
-            while(a != NULL){//percorre a lista com o auxiliar 'a' até que o proximo seja nulo
-              if(strcmp(a->info.zona, menor->info.zona) < 0){ // Compara strings -1 menor, 0 igual, 1 maior
-                menor = a; // se o código da Posição 'a' for menor que o 'menor', entao o menor é 'a'
-                while(b->prox != menor)//percorrre a lista procurando a posição anterior ao menor
-                  b = b->prox; // 'b' se posiciona na posição anterior ao menor
-              }
-              a = a->prox; // 'a' se posiciona uma posição após ele mesmo
-            }
-            if(p == *l){ // se 'p' estiver na primeira Posição, alteramos a primeira posição
-              if(menor == p){ // se o p for o menor
-                p = p->prox; // passamos o p para a próxima posição
-              }else{
-                *l = menor; // 'l' aponta para o 'menor', ou seja, o primeiro vai ser o menor ;)
-                b->prox = menor->prox; // 'b' aponta para o mesmo lugar que o 'menor' estava appontando
-                menor->prox = p; // 'menor' agora aponta para 'p'
-              }
-            }else{
-              if(menor == p){ // se o p for o menor
-                p=p->prox; // passamos o p para a próxima posição
-              }else{
-                a = *l; // posicionamos 'a' no inicio
-                while(a->prox != p) //percorrre a lista procurando a posição anterior ao p
-                  a = a->prox; // 'a' se posiciona na posição próxima a ele mesmo
-                a->prox = menor;  // prox de a aponta para o menor
-                b->prox = menor->prox; // prox de b aponta para o mesmo lugar que aponta o prox do menor
-                menor->prox = p; // prox de menor aponta para p
-              }
-            }
-            menor = p;  //menor recebe p
-            b = p;    // a ordenação continua a partir de 'p'
-            a = p->prox; // 'a' aponta para o próximo de 'p', novamente...
-          }
-        break;                        
-        case '0':     // opção de saída                                      
-        break;              
-        default : 
-          printf( "\n Opção inválida!" );
-        break;
-      }
-		  _sleep(5000); // da uma pausa em Milissegundo
-		  tempoFinal = time(NULL); // captura o tempo final da execução
-      tempoGasto= difftime(tempoFinal, tempoInicial); // retorna a diferença entre o tempo final e tempo inicial
+
+                break;
+                                
+           case '0':     // opção de saída                                      
+                break;
+                
+           default : 
+                printf( "\n Opção inválida!" );
+                break;
+        }
+		_sleep(5000); // da uma pausa em Milissegundo
+		tempoFinal = time(NULL); // captura o tempo final da execução
+      	tempoGasto= difftime(tempoFinal, tempoInicial); // retorna a diferença entre o tempo final e tempo inicial
         
-      printf("Ordenado com sucesso! \n");
-		  printf("Tempo de execucao %f",tempoGasto); // mostra o tempo de execução 
+        printf("Ordenado com sucesso! \n");
+		printf("Tempo de execucao %f",tempoGasto); // mostra o tempo de execução 
+	
     }
-  }
+
+}
+
 }
 
 /************************************************ 
  * procura_nodo                                 *
  * objetivo: achar um registro por codigo       *
  * entrada : lista e codigo a ser procurado     *
- * saída   : Posição ou NULL (Não encontrou)    *
+ * saÃ­da   : posicao ou NULL (nÃ£o encontrou)    *
  ************************************************/ 
 
 LISTA* procura_nodo( LISTA *p, int cod ){
@@ -482,7 +401,7 @@ LISTA* procura_nodo( LISTA *p, int cod ){
  * remover_registro                                *
  * objetivo: rotina para excluir registro da lista *
  * entrada : lista                                 *
- * saída   : nenhum                                *
+ * saida   : nenhum                                *
  ***************************************************/ 
 
 
@@ -519,7 +438,7 @@ void remover_registro(LISTA** l){
  * validarZona                                                   *
  * objetivo: função para validar se a zona digitada está correta *
  * entrada : char[1]                                             *
- * saída   : int                                                 *
+ * saida   : int                                                 *
  *****************************************************************/ 
 int validarZona(char zona[1]){
 	switch(zona[0]){
@@ -539,10 +458,10 @@ int validarZona(char zona[1]){
  * altera_lista                                 *
  * objetivo: rotina para alterar dados          *
  * entrada : lista                               *
- * saída   : nenhuma                             *
+ * saida   : nenhuma                             *
  *************************************************/ 
 void altera_lista( LISTA** aux ){
-	int codigo;// Recebe código do item que será alterado
+	int codigo;							// Recebe código do item que será alterado
 	LISTA* no;
 	
 	if( aux == NULL )
